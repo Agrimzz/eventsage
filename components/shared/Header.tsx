@@ -1,10 +1,16 @@
 "use client"
-import { IconMenu4 } from "@tabler/icons-react"
+import { IconMenu4, IconPower } from "@tabler/icons-react"
 import { useRouter } from "next/navigation"
-import React from "react"
+import React, { useEffect, useState } from "react"
 
 function Header() {
   const router = useRouter()
+
+  const [token, setToken] = useState<string>("")
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token")
+    if (storedToken) setToken(storedToken)
+  }, [])
   return (
     <div className="w-full grid grid-cols-12 py-8 items-center fixed z-50">
       <div className="col-span-1 mx-auto text-center">
@@ -17,12 +23,27 @@ function Header() {
         >
           EVENTSAGE
         </h1>
-        <button
-          className="rounded-full bg-primary-500 px-12 py-4 cursor-pointer"
-          onClick={() => router.push("/signin")}
-        >
-          Login
-        </button>
+        {token === "" ? (
+          <button
+            className="rounded-full bg-primary-500 px-12 py-4 cursor-pointer"
+            onClick={() => router.push("/signin")}
+          >
+            Login
+          </button>
+        ) : (
+          <div className="flex gap-4 items-center">
+            <h3 className="p-bold-20">{token}</h3>
+            <button
+              className="rounded-full bg-primary-500 px-8 py-4 cursor-pointer"
+              onClick={() => {
+                localStorage.clear()
+                router.push("/signin")
+              }}
+            >
+              LogOut
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
