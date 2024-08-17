@@ -32,6 +32,9 @@ function Header() {
           </button>
         ) : (
           <div className="flex gap-4 items-center">
+            <a href="/events/create" className="p-medium-18 underline">
+              Create Event
+            </a>
             <h3 className="p-bold-20">{token}</h3>
             <button
               className="rounded-full bg-primary-500 px-8 py-4 cursor-pointer"

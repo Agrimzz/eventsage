@@ -33,7 +33,7 @@ export default function Login() {
   }
 
   return (
-    <div className="max-w-96 h-auto bg-grey py-12 px-8 m-auto mt-40 rounded-lg flex flex-col gap-12 z-50">
+    <div className="max-w-xl h-auto bg-grey py-12 px-12 m-auto mt-40 rounded-lg flex flex-col gap-12 z-40">
       <h2 className="h2-bold text-center">Sign In</h2>
       <form className="space-y-6" onSubmit={handleLogin}>
         <div>
@@ -61,7 +61,7 @@ export default function Login() {
         {error && <p className="text-red-300 text-center">{error}</p>}
         <p className="text-center">
           Dont have an account?{" "}
-          <a href="/signup" className="font-bold">
+          <a href="/signup" className="font-bold underline">
             Sign Up
           </a>
         </p>

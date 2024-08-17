@@ -51,6 +51,9 @@ body {
   .h4-medium {
     @apply font-medium text-[32px] leading-[40px];
   }
+  .h4-bold {
+    @apply font-bold text-[32px] leading-[40px];
+  }
 
   /* 28 */
   .h5-bold {

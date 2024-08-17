@@ -1,5 +1,7 @@
 "use client"
 import Hero from "@/components/shared/Home/Hero"
+import HomeText from "@/components/shared/Home/HomeText"
+import LatestEvents from "@/components/shared/Home/LatestEvents"
 import { useEffect } from "react"
 
 export default function Home() {
@@ -16,6 +18,8 @@ export default function Home() {
   return (
     <div>
       <Hero />
+      <HomeText />
+      <LatestEvents />
     </div>
   )
 }
