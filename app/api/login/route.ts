@@ -34,7 +34,7 @@ export async function POST(req: Request, res: Response) {
       )
     }
 
-    return new Response(JSON.stringify(email), { status: 200 })
+    return new Response(JSON.stringify(user), { status: 200 })
   } catch (error) {
     return new Response(JSON.stringify(error), { status: 500 })
   }

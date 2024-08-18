@@ -8,7 +8,7 @@ function Header() {
 
   const [token, setToken] = useState<string>("")
   useEffect(() => {
-    const storedToken = localStorage.getItem("token")
+    const storedToken = localStorage.getItem("email")
     if (storedToken) setToken(storedToken)
   }, [])
   return (

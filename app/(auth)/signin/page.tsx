@@ -20,7 +20,8 @@ export default function Login() {
       if (res.ok) {
         const data = await res.json()
         console.log(data)
-        localStorage.setItem("token", data)
+        localStorage.setItem("id", data._id)
+        localStorage.setItem("email", data.email)
         router.push("/")
       } else {
         const data = await res.json()
