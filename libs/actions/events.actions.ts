@@ -2,6 +2,7 @@
 
 import { connectToDatabase } from "../database"
 import { promises as fs } from "fs"
+import { ObjectId } from "mongodb"
 import path from "path"
 import { v4 as uuidv4 } from "uuid"
 
@@ -11,8 +12,8 @@ export const getEvents = async () => {
     const events = await db.collection("events").find().toArray()
     return JSON.parse(JSON.stringify(events))
   } catch (err) {
-    console.log(err)
-    return []
+    console.error("Error creating event:", err)
+    return { err: err || "Unknown error" }
   }
 }
 export const getLatestEvents = async () => {
@@ -26,8 +27,20 @@ export const getLatestEvents = async () => {
       .toArray()
     return JSON.parse(JSON.stringify(events))
   } catch (err) {
-    console.log(err)
-    return []
+    console.error("Error creating event:", err)
+    return JSON.parse(JSON.stringify({ err: err }))
+  }
+}
+
+export async function getEventById(eventID: string) {
+  try {
+    const db = await connectToDatabase()
+    const event = await db
+      .collection("events")
+      .findOne({ _id: new ObjectId(eventID) })
+    return JSON.parse(JSON.stringify(event))
+  } catch (err) {
+    return JSON.parse(JSON.stringify({ err: err }))
   }
 }
 
@@ -57,14 +70,13 @@ export const createEvent = async (formData: FormData) => {
       eventData.image = uniqueFileName
     }
 
-    // Insert the event into the database
     const result = await eventCollection.insertOne({
-      ...eventData, // Spread the event data into the object to be inserted
+      ...eventData,
     })
 
     return "Success"
   } catch (err) {
     console.error("Error creating event:", err)
-    return { err: err || "Unknown error" }
+    return JSON.parse(JSON.stringify({ err: err }))
   }
 }

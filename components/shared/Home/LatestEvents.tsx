@@ -2,10 +2,12 @@
 
 import { events } from "@/constants/events"
 import { getLatestEvents } from "@/libs/actions/events.actions"
+import { useRouter } from "next/navigation"
 import React, { useEffect, useState } from "react"
 
 function LatestEvents() {
   const [events, setEvents] = useState([])
+  const router = useRouter()
 
   const fetchEvents = async () => {
     const eventsList = await getLatestEvents()
@@ -19,6 +21,7 @@ function LatestEvents() {
   const event = events?.map((event, i) => (
     <div
       key={event._id}
+      onClick={() => router.push(`/events/${event._id}`)}
       className="relative col-span-3 p-8 h-[600px] bg-cover bg-center z-30 cursor-pointer transition-transform duration-500 ease-in-out hover:scale-105 group hover:z-40"
       style={{
         backgroundImage: `url(/eventImages/${event.image})`,
