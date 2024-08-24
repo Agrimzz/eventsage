@@ -5,7 +5,6 @@ async function EventsPage({ params }: { params: { id: string } }) {
   const id = params.id
 
   const eventDetails = await getEventById(id)
-  console.log(eventDetails)
 
   return (
     <div className="mt-36 grid grid-cols-12 relative">
