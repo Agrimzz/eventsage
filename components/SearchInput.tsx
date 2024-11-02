@@ -1,6 +1,6 @@
 import React from "react"
 import Form from "next/form"
-import { IconSearch } from "@tabler/icons-react"
+import { IconSearch, IconX } from "@tabler/icons-react"
 
 const SearchInput = () => {
   return (
@@ -12,9 +12,14 @@ const SearchInput = () => {
         placeholder="Search Events"
       />
 
-      <button className="search-btn text-white" type="submit">
-        <IconSearch />
-      </button>
+      <div className="flex justify-between items-center gap-2">
+        <button className="search-btn text-white">
+          <IconX />
+        </button>
+        <button className="search-btn text-white" type="submit">
+          <IconSearch />
+        </button>
+      </div>
     </Form>
   )
 }
