@@ -1,5 +1,8 @@
 import type { Metadata } from "next"
 import "./globals.css"
+import "@mantine/core/styles.css"
+import "@mantine/dates/styles.css"
+import { MantineProvider } from "@mantine/core"
 
 export const metadata: Metadata = {
   title: "Eventsage",
@@ -13,7 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <MantineProvider>{children}</MantineProvider>
+      </body>
     </html>
   )
 }

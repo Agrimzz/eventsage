@@ -10,16 +10,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async session({ session }) {
       // store the user id from MongoDB to session
-      console.log(session)
       const sessionUser = await User.findOne({ email: session.user.email })
       session.user.id = sessionUser._id.toString()
 
       return session
     },
-    async signIn({ profile, account }) {
+    async signIn({ profile }) {
       try {
         await connectToDatabase()
-        console.log(account)
         // check if user already exists
         const existingUser = await User.findOne({ email: profile?.email })
 

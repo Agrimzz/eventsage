@@ -6,9 +6,9 @@ const Navbar = async () => {
   const session = await auth()
 
   return (
-    <header className="px-5 py-3 bg-white shadow-sm sticky top-0">
+    <header className="px-5 py-3 bg-white shadow-sm z-50 sticky top-0">
       <nav className="flex justify-between items-center">
-        <Link href="./">
+        <Link href="/">
           <span className="text-3xl font-bold">
             Event<span className="text-primary">Sage</span>
           </span>
@@ -17,17 +17,9 @@ const Navbar = async () => {
         <div className="flex items-center gap-5 text-black">
           {session && session?.user ? (
             <>
-              <Link href="/startup/create">
+              <Link href="/events/create">
                 <span className="max-sm:hidden">Create</span>
               </Link>
-
-              <Image
-                src={session.user.image || ""}
-                alt={session.user.name || ""}
-                width={50}
-                height={50}
-                className="rounded-full"
-              />
 
               <form
                 action={async () => {
@@ -40,6 +32,13 @@ const Navbar = async () => {
                   <span className="max-sm:hidden">Logout</span>
                 </button>
               </form>
+              <Image
+                src={session.user.image || ""}
+                alt={session.user.name || ""}
+                width={50}
+                height={50}
+                className="rounded-full"
+              />
             </>
           ) : (
             <form
