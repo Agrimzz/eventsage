@@ -1,10 +1,13 @@
 "use client"
 import { NumberInput, Select, Textarea, TextInput } from "@mantine/core"
-import { useForm } from "@mantine/form"
+import { useForm, zodResolver } from "@mantine/form"
 import React, { useEffect, useState } from "react"
 import ImageUpload from "./ImageUpload"
 import { DateTimePicker } from "@mantine/dates"
 import MDEditor from "@uiw/react-md-editor"
+import { eventFormSchema } from "@/lib/validator"
+import { createEvent } from "@/lib/actions/event.actions"
+import { useRouter } from "next/navigation"
 
 type EventFormProps = {
   userId: string
@@ -24,9 +27,8 @@ const formStyles = {
 }
 
 const EventForm = ({ userId, type }: EventFormProps) => {
-  console.log(userId, type)
-
   // State to store the image preview URL
+  const router = useRouter()
   const [image, setImage] = useState<File | null>(null)
 
   const form = useForm({
@@ -35,32 +37,53 @@ const EventForm = ({ userId, type }: EventFormProps) => {
       category: "",
       description: "",
       info: "",
-      image: null,
-      startDate: "",
-      endDate: "",
+      imageUrl: null,
+      startDateTime: new Date(),
+      endDateTime: new Date(),
       location: "",
       mapLink: "",
       url: "",
-      ticketPrice: 0,
-      ticketDate: "",
+      price: 0,
+      ticketDate: new Date(),
     },
+    validate: zodResolver(eventFormSchema),
   })
 
   useEffect(() => {
+    console.log(image)
     if (image) {
-      form.setFieldValue("image", image)
+      form.setFieldValue("imageUrl", image)
     }
   }, [image])
+
+  async function handleSubmit() {
+    console.log("asdasd")
+    if (type === "create") {
+      try {
+        const newEvent = await createEvent({
+          userId,
+          event: {
+            ...form.values,
+            imageUrl: form.values.imageUrl ? form.values.imageUrl : "",
+          },
+          path: "events",
+        })
+        if (newEvent) {
+          form.reset()
+          router.push("/")
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
 
   return (
     <div className="max-w-5xl flex my-10 mx-auto max-sm:flex-col relative">
       <div className="sticky top-20 h-[400px] max-sm:relative ">
         <ImageUpload setImage={setImage} />
       </div>
-      <form
-        className="event-form"
-        onSubmit={form.onSubmit((values) => console.log(values))}
-      >
+      <form className="event-form" onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
           label="Title"
           placeholder="Event Title"
@@ -83,15 +106,15 @@ const EventForm = ({ userId, type }: EventFormProps) => {
           placeholder="Start Date"
           styles={formStyles}
           size="lg"
-          {...form.getInputProps("startDate")}
+          {...form.getInputProps("startDateTime")}
         />
         <DateTimePicker
-          minDate={form.getInputProps("startDate").value as Date}
+          minDate={form.getInputProps("startDateTime").value as Date}
           label="End Date"
           placeholder="End Date"
           styles={formStyles}
           size="lg"
-          {...form.getInputProps("endDate")}
+          {...form.getInputProps("endDateTime")}
         />
 
         <TextInput
@@ -124,10 +147,10 @@ const EventForm = ({ userId, type }: EventFormProps) => {
           styles={formStyles}
           hideControls
           max={5000}
-          {...form.getInputProps("ticketPrice")}
+          {...form.getInputProps("price")}
         />
         <DateTimePicker
-          maxDate={form.getInputProps("startDate").value as Date}
+          maxDate={form.getInputProps("startDateTime").value as Date}
           label="Ticket Sales End"
           placeholder="Sales End Date"
           styles={formStyles}

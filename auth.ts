@@ -29,9 +29,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             image: profile?.picture,
           }
           await User.create(newUser)
-          console.log("User created:", newUser)
-        } else {
-          console.log("User already exists:", existingUser)
         }
 
         return true
