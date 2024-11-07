@@ -5,7 +5,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main>
       <Navbar />
-      <div className="h-[60px]" />
+      {/* <div className="h-[60px]" /> */}
       {children}
     </main>
   )

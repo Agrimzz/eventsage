@@ -1,16 +1,58 @@
 import Link from "next/link"
-import React from "react"
+import Image from "next/image"
+import { auth, signOut, signIn } from "@/auth"
 
-const Navbar = () => {
+const Navbar = async () => {
+  const session = await auth()
+
   return (
-    <header className="px-5 py-3 bg-white shadow-sm fixed w-full">
-      <nav className="flex-between">
+    <header className="px-5 py-3 bg-white shadow-sm sticky top-0">
+      <nav className="flex justify-between items-center">
         <Link href="./">
           <span className="text-3xl font-bold">
             Event<span className="text-primary">Sage</span>
           </span>
         </Link>
-        <p className="text-lg">Login</p>
+
+        <div className="flex items-center gap-5 text-black">
+          {session && session?.user ? (
+            <>
+              <Link href="/startup/create">
+                <span className="max-sm:hidden">Create</span>
+              </Link>
+
+              <Image
+                src={session.user.image || ""}
+                alt={session.user.name || ""}
+                width={50}
+                height={50}
+                className="rounded-full"
+              />
+
+              <form
+                action={async () => {
+                  "use server"
+
+                  await signOut({ redirectTo: "/" })
+                }}
+              >
+                <button type="submit">
+                  <span className="max-sm:hidden">Logout</span>
+                </button>
+              </form>
+            </>
+          ) : (
+            <form
+              action={async () => {
+                "use server"
+
+                await signIn("google")
+              }}
+            >
+              <button type="submit">Login</button>
+            </form>
+          )}
+        </div>
       </nav>
     </header>
   )
