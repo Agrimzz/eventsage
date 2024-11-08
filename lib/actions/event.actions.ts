@@ -9,9 +9,12 @@ import { v4 as uuidv4 } from "uuid"
 import { revalidatePath } from "next/cache"
 import Event from "../database/models/event.model"
 
-// Ensure event type allows 'File | string | null' for 'imageUrl'
-type EventData = Omit<CreateEventParams["event"], "imageUrl"> & {
-  imageUrl: File | string | null
+const populateEvent = async (query: any) => {
+  return query.populate({
+    path: "organizer",
+    model: "User",
+    select: "_id email username image",
+  })
 }
 
 export async function createEvent({
@@ -24,9 +27,9 @@ export async function createEvent({
 
     const organizer = await User.findOne({ _id: userId })
     if (!organizer) throw new Error("Organizer not found")
-    console.log(organizer)
     // Process image if it's a File
     if (event.imageUrl) {
+      //@ts-expect-error i dont know how to type this
       const imageFile = event.imageUrl as Blob
       const buffer = Buffer.from(await imageFile.arrayBuffer())
       const extension = imageFile.type.split("/")[1]
@@ -41,7 +44,6 @@ export async function createEvent({
       await fs.writeFile(imagePath, buffer)
 
       event.imageUrl = uniqueFileName
-      console.log(event.imageUrl + "-------------------")
     }
 
     // Create a new event with organizer and updated imageUrl
@@ -49,7 +51,6 @@ export async function createEvent({
       ...event,
       organizer: userId, // Pass userId as organizer
     })
-    console.log(newEvent)
 
     // Revalidate the path for dynamic content updates
     revalidatePath(revalidatePathParam)
@@ -58,5 +59,16 @@ export async function createEvent({
   } catch (error) {
     console.log(error)
     throw new Error("Failed to create event")
+  }
+}
+
+export const getEventById = async (id: string) => {
+  try {
+    await connectToDatabase()
+    const event = await populateEvent(Event.findById(id))
+    return JSON.parse(JSON.stringify(event))
+  } catch (error) {
+    console.log(error)
+    throw new Error("Failed to get event")
   }
 }

@@ -52,12 +52,12 @@ const EventForm = ({ userId, type }: EventFormProps) => {
   useEffect(() => {
     console.log(image)
     if (image) {
+      //@ts-expect-error i dont know how to type this
       form.setFieldValue("imageUrl", image)
     }
   }, [image])
 
   async function handleSubmit() {
-    console.log("asdasd")
     if (type === "create") {
       try {
         const newEvent = await createEvent({
@@ -66,11 +66,11 @@ const EventForm = ({ userId, type }: EventFormProps) => {
             ...form.values,
             imageUrl: form.values.imageUrl ? form.values.imageUrl : "",
           },
-          path: "events",
+          path: "/profile",
         })
         if (newEvent) {
           form.reset()
-          router.push("/")
+          router.push(`/events/${newEvent._id}`)
         }
       } catch (error) {
         console.log(error)

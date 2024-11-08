@@ -48,7 +48,11 @@ body {
   }
 
   .no-result {
-    @apply text-black-100 text-sm font-normal;
+    @apply text-black/10 text-sm font-normal;
+  }
+
+  .divider {
+    @apply border-dotted bg-zinc-400 max-w-4xl my-10 mx-auto;
   }
 
   .search-form {

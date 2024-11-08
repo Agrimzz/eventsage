@@ -10,6 +10,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async session({ session }) {
       // store the user id from MongoDB to session
+      await connectToDatabase()
       const sessionUser = await User.findOne({ email: session.user.email })
       session.user.id = sessionUser._id.toString()
 
