@@ -1,5 +1,5 @@
 import { getEventById } from "@/lib/actions/event.actions"
-import { formatDate } from "@/lib/utlis"
+import { formatDate, formatDateTime } from "@/lib/utlis"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
@@ -60,8 +60,16 @@ const EventDetails = async ({
               {event.category}
             </p>
           </div>
-
-          <h3 className="text-3xl font-bold">Event Details</h3>
+          <h3 className="text-3xl font-bold">Date and Time</h3>
+          <p className="text-base font-semibold">
+            {formatDateTime(event.endDateTime)} -{" "}
+            {formatDateTime(event.startDateTime)}
+          </p>
+          <h3 className="text-3xl font-bold">Location</h3>
+          <Link href={event.mapLink} target="_blank">
+            <p className="text-base font-semibold mt-5">{event.location}</p>
+          </Link>
+          <h3 className="text-3xl font-bold">About this event</h3>
           {parsedContent ? (
             <article
               dangerouslySetInnerHTML={{ __html: parsedContent }}
@@ -70,6 +78,9 @@ const EventDetails = async ({
           ) : (
             <p className="no-result">No details provided.</p>
           )}
+
+          {/* <h3 className="text-3xl font-bold">Map</h3> */}
+          {/* TODO: Add map */}
         </div>
 
         <hr className="divider" />

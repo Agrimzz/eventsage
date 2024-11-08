@@ -5,3 +5,13 @@ export function formatDate(date: string) {
     year: "numeric",
   })
 }
+
+export function formatDateTime(date: string) {
+  return new Date(date).toLocaleString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  })
+}
