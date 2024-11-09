@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid"
 import { revalidatePath } from "next/cache"
 import Event from "../database/models/event.model"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const populateEvent = async (query: any) => {
   return query.populate({
     path: "organizer",
@@ -49,6 +50,7 @@ export async function createEvent({
     // Create a new event with organizer and updated imageUrl
     const newEvent = await Event.create({
       ...event,
+      views: 0,
       organizer: userId, // Pass userId as organizer
     })
 
@@ -96,5 +98,25 @@ export const getAllEvents = async ({
   } catch (error) {
     console.log(error)
     throw new Error("Failed to get event")
+  }
+}
+
+export const incrementEventViews = async (eventId: string) => {
+  try {
+    await connectToDatabase()
+
+    // Increment the views field by 1
+    const updatedEvent = await Event.findByIdAndUpdate(
+      eventId,
+      { $inc: { views: 1 } },
+      { new: true } // Returns the updated document after incrementing
+    )
+
+    if (!updatedEvent) throw new Error("Event not found")
+
+    return JSON.parse(JSON.stringify(updatedEvent))
+  } catch (error) {
+    console.log(error)
+    throw new Error("Failed to increment event views")
   }
 }

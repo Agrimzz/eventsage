@@ -17,5 +17,6 @@ export const eventFormSchema = z.object({
   ticketDate: z.date(),
   category: z.string(),
   price: z.number(),
+  views: z.number(),
   url: z.string().url().optional(),
 })

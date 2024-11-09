@@ -6,6 +6,7 @@ import React from "react"
 import markdownit from "markdown-it"
 import { notFound } from "next/navigation"
 import { IconCalendarCheck, IconMapPin, IconPin } from "@tabler/icons-react"
+import View from "@/components/View"
 
 const md = markdownit()
 
@@ -110,6 +111,7 @@ const EventDetails = async ({
         </div>
         <hr className="divider" />
       </section>
+      <View id={event._id} views={event.views} />
     </>
   )
 }

@@ -94,4 +94,12 @@ body {
   .event-form_btn {
     @apply bg-primary border-[4px] border-black rounded-full p-5 min-h-[70px] w-full font-bold text-[18px] hover:bg-primary/80 !important;
   }
+
+  .view-container {
+    @apply flex justify-end items-center mt-5 fixed bottom-3 right-3;
+  }
+
+  .view-text {
+    @apply font-medium text-[16px] bg-primary/60 px-4 py-2 rounded-lg capitalize;
+  }
 }

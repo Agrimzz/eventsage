@@ -44,6 +44,7 @@ const EventForm = ({ userId, type }: EventFormProps) => {
       mapLink: "",
       url: "",
       price: 0,
+      views: 0,
       ticketDate: new Date(),
     },
     validate: zodResolver(eventFormSchema),

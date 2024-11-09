@@ -13,6 +13,7 @@ export interface IEvent extends Document {
   url: string
   price: number
   ticketDate: Date
+  views: number
   organizer: { _id: string; username: string; email: string }
 }
 
@@ -30,6 +31,7 @@ const EventSchema = new Schema<IEvent>(
     url: { type: String },
     price: { type: Number, required: true, max: 5000 },
     ticketDate: { type: Date, required: true },
+    views: { type: Number, default: 0 },
     organizer: { type: Schema.Types.ObjectId, ref: "Users" },
   },
   {

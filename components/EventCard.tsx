@@ -17,6 +17,7 @@ const EventCard = ({ event }: { event: EventDetails }) => {
     category,
     ticketDate,
     price,
+    views,
     url,
     organizer: { _id: organizerId, username, image },
   } = event
@@ -26,7 +27,7 @@ const EventCard = ({ event }: { event: EventDetails }) => {
         <p className="event-card_date">{formatDate(startDateTime)}</p>
         <div className="flex gap-1.5">
           <IconEye color="#2B64EE" />
-          <span className="font-medium text-base">2 views</span>
+          <span className="font-medium text-base">{views} views</span>
         </div>
       </div>
 
