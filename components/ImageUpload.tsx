@@ -1,13 +1,20 @@
-"use client"
 import { FileButton } from "@mantine/core"
-import React, { useState, Dispatch, SetStateAction } from "react"
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react"
 
 type ImageUploadProps = {
   setImage: Dispatch<SetStateAction<File | null>>
+  currentImageUrl?: string | null // To accept the current image URL for edit mode
 }
 
-const ImageUpload = ({ setImage }: ImageUploadProps) => {
+const ImageUpload = ({ setImage, currentImageUrl }: ImageUploadProps) => {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+
+  // Update image preview if `currentImageUrl` changes and no file has been uploaded
+  useEffect(() => {
+    if (currentImageUrl && !imagePreview) {
+      setImagePreview(`/eventImages/${currentImageUrl}`)
+    }
+  }, [currentImageUrl])
 
   const handleImageChange = (file: File | null) => {
     if (file) {

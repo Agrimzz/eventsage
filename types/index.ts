@@ -17,22 +17,29 @@ export type CreateEventParams = {
   }
   path: string
 }
-
 export type UpdateEventParams = {
   userId: string
   event: {
     _id: string
     title: string
-    imageUrl: string
     description: string
+    info: string
     location: string
+    imageUrl: string
+    prevImageUrl: string
     startDateTime: Date
     endDateTime: Date
-    categoryId: string
-    price: string
-    isFree: boolean
+    category: string
+    price: number
+    ticketDate: Date
     url: string
+    mapLink: string
   }
+  path: string
+}
+
+export type DeleteEventParams = {
+  id: string
   path: string
 }
 

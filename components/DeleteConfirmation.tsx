@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation"
 import React from "react"
 
 const DeleteConfirmation = ({ id }: { id: string }) => {
-  const pathname = usePathname()
+  const path = usePathname()
   const openDeleteModal = () =>
     modals.openConfirmModal({
       title: "Are you sure you want to delete this event?",
@@ -19,7 +19,7 @@ const DeleteConfirmation = ({ id }: { id: string }) => {
       ),
       labels: { confirm: "Delete", cancel: "Cancel" },
       confirmProps: { color: "red" },
-      onConfirm: async () => await deleteEvent(id, pathname),
+      onConfirm: async () => await deleteEvent({ id, path }),
     })
   return (
     <>

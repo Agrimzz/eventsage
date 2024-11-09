@@ -1,6 +1,11 @@
 "use server"
 
-import { CreateEventParams, GetAllEventsParams } from "@/types"
+import {
+  CreateEventParams,
+  DeleteEventParams,
+  GetAllEventsParams,
+  UpdateEventParams,
+} from "@/types"
 import { connectToDatabase } from "../database"
 import User from "../database/models/user.model"
 import { promises as fs } from "fs"
@@ -64,6 +69,66 @@ export async function createEvent({
   }
 }
 
+export async function updateEvent({
+  userId,
+  event,
+  path: revalidatePathParam,
+}: UpdateEventParams) {
+  try {
+    await connectToDatabase()
+
+    const organizer = await User.findOne({ _id: userId })
+    if (!organizer) throw new Error("Organizer not found")
+
+    const eventToUpdate = await Event.findById(event._id)
+    if (!eventToUpdate) throw new Error("Event not found")
+    // Process image if it's a File
+
+    console.log(event, eventToUpdate)
+
+    if (event.imageUrl && typeof event.imageUrl !== "string") {
+      const previousImagePath = path.join(
+        process.cwd(),
+        "public",
+        "eventImages",
+        eventToUpdate.imageUrl
+      )
+      // Delete the previous image file if it exists
+      await fs.unlink(previousImagePath).catch(() => {
+        console.log("Previous image file not found or already deleted")
+      })
+
+      const imageFile = event.imageUrl as Blob
+      const buffer = Buffer.from(await imageFile.arrayBuffer())
+      const extension = imageFile.type.split("/")[1]
+      const uniqueFileName = `${uuidv4()}.${extension}`
+
+      const imagePath = path.join(
+        process.cwd(),
+        "public",
+        "eventImages",
+        uniqueFileName
+      )
+      await fs.writeFile(imagePath, buffer)
+
+      event.imageUrl = uniqueFileName
+    }
+
+    const updatedEvent = await Event.findByIdAndUpdate(event._id, {
+      ...event,
+      organizer: userId, // Pass userId as organizer
+    })
+
+    // Revalidate the path for dynamic content updates
+    revalidatePath(revalidatePathParam)
+
+    return JSON.parse(JSON.stringify(updatedEvent))
+  } catch (error) {
+    console.log(error)
+    throw new Error("Failed to create event")
+  }
+}
+
 export const getEventById = async (id: string) => {
   try {
     await connectToDatabase()
@@ -121,11 +186,26 @@ export const incrementEventViews = async (eventId: string) => {
   }
 }
 
-export async function deleteEvent(eventId: string, path: string) {
+export async function deleteEvent({
+  id,
+  path: revalidatePathParam,
+}: DeleteEventParams) {
   try {
     await connectToDatabase()
-    const deletedEvent = await Event.findByIdAndDelete(eventId)
-    if (deletedEvent) revalidatePath(path)
+    const eventToDelete = await Event.findByIdAndDelete(id)
+    if (eventToDelete?.imageUrl) {
+      const imagePath = path.join(
+        process.cwd(),
+        "public",
+        "eventImages",
+        eventToDelete.imageUrl
+      )
+      // Delete the image file if it exists
+      await fs.unlink(imagePath).catch(() => {
+        console.log("Image file not found or already deleted")
+      })
+    }
+    if (eventToDelete) revalidatePath(revalidatePathParam)
   } catch (error) {
     console.log(error)
     throw new Error("Failed to delete event")

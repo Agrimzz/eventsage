@@ -6,12 +6,15 @@ import ImageUpload from "./ImageUpload"
 import { DateTimePicker } from "@mantine/dates"
 import MDEditor from "@uiw/react-md-editor"
 import { eventFormSchema } from "@/lib/validator"
-import { createEvent } from "@/lib/actions/event.actions"
+import { createEvent, updateEvent } from "@/lib/actions/event.actions"
 import { useRouter } from "next/navigation"
+import { IEvent } from "@/lib/database/models/event.model"
 
 type EventFormProps = {
   userId: string
   type: "create" | "update"
+  eventId?: string
+  event?: IEvent
 }
 
 const formStyles = {
@@ -26,32 +29,32 @@ const formStyles = {
   },
 }
 
-const EventForm = ({ userId, type }: EventFormProps) => {
+const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
   // State to store the image preview URL
   const router = useRouter()
   const [image, setImage] = useState<File | null>(null)
 
   const form = useForm({
     initialValues: {
-      title: "",
-      category: "",
-      description: "",
-      info: "",
-      imageUrl: null,
-      startDateTime: new Date(),
-      endDateTime: new Date(),
-      location: "",
-      mapLink: "",
-      url: "",
-      price: 0,
-      views: 0,
-      ticketDate: new Date(),
+      title: event?.title || "",
+      category: event?.category || "",
+      description: event?.description || "",
+      info: event?.info || "",
+      imageUrl: event?.imageUrl || null,
+      startDateTime: event ? new Date(event.startDateTime) : new Date(),
+      endDateTime: event ? new Date(event.endDateTime) : new Date(),
+      location: event?.location || "",
+      mapLink: event?.mapLink || "",
+      url: event?.url || "",
+      price: event?.price || 0,
+      views: event?.views || 0,
+      ticketDate: event ? new Date(event.ticketDate) : new Date(),
+      ...(type === "update" && { prevImageUrl: event?.imageUrl || "" }),
     },
     validate: zodResolver(eventFormSchema),
   })
 
   useEffect(() => {
-    console.log(image)
     if (image) {
       //@ts-expect-error i dont know how to type this
       form.setFieldValue("imageUrl", image)
@@ -77,12 +80,38 @@ const EventForm = ({ userId, type }: EventFormProps) => {
         console.log(error)
       }
     }
+    if (type === "update") {
+      if (!eventId) {
+        router.back()
+        return
+      }
+      try {
+        const updatedEvent = await updateEvent({
+          userId,
+          event: {
+            ...form.values,
+            imageUrl: form.values.imageUrl ? form.values.imageUrl : "",
+            _id: eventId,
+          },
+          path: `/events/${eventId}`,
+        })
+        if (updatedEvent) {
+          form.reset()
+          router.push(`/events/${updatedEvent._id}`)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
 
   return (
     <div className="max-w-5xl flex my-10 mx-auto max-sm:flex-col relative">
       <div className="sticky top-20 h-[400px] max-sm:relative ">
-        <ImageUpload setImage={setImage} />
+        <ImageUpload
+          setImage={setImage}
+          currentImageUrl={event?.imageUrl || null}
+        />
       </div>
       <form className="event-form" onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
@@ -192,8 +221,8 @@ const EventForm = ({ userId, type }: EventFormProps) => {
           />
         </div>
 
-        <button type="submit" className="event-form_btn text-white">
-          Submit
+        <button type="submit" className="event-form_btn text-white capitalize">
+          {type} Event
         </button>
       </form>
     </div>
