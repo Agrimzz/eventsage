@@ -49,6 +49,11 @@ export type GetAllEventsParams = {
   limit: number
   page: number
 }
+export type GetEventsByUserParams = {
+  id: string
+  limit: number
+  page: number
+}
 
 export type Organizer = {
   _id: string

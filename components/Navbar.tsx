@@ -32,13 +32,15 @@ const Navbar = async () => {
                   <span className="max-sm:hidden">Logout</span>
                 </button>
               </form>
-              <Image
-                src={session.user.image || ""}
-                alt={session.user.name || ""}
-                width={50}
-                height={50}
-                className="rounded-full"
-              />
+              <Link href="/profile">
+                <Image
+                  src={session.user.image || ""}
+                  alt={session.user.name || ""}
+                  width={50}
+                  height={50}
+                  className="rounded-full"
+                />
+              </Link>
             </>
           ) : (
             <form

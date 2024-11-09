@@ -49,7 +49,7 @@ const EventCard = async ({ event }: { event: EventDetails }) => {
 
       <div className="flex-between mt-5 gap-5">
         <div className="flex-1">
-          <Link href={`/user/${organizerId}`}>
+          <Link href={`/profile/${organizerId}`}>
             <p className="font-medium text-base">@{username}</p>
           </Link>
           <h3 className="text-2xl font-semibold line-clamp-1">
@@ -57,7 +57,7 @@ const EventCard = async ({ event }: { event: EventDetails }) => {
           </h3>
         </div>
 
-        <Link href={`/user/${organizerId}`}>
+        <Link href={`/profile/${organizerId}`}>
           <Image
             src={image}
             alt={username}

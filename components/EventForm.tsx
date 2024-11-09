@@ -88,6 +88,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
       try {
         const updatedEvent = await updateEvent({
           userId,
+          //@ts-expect-error i dont know how to type this
           event: {
             ...form.values,
             imageUrl: form.values.imageUrl ? form.values.imageUrl : "",

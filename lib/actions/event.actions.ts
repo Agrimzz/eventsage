@@ -4,6 +4,7 @@ import {
   CreateEventParams,
   DeleteEventParams,
   GetAllEventsParams,
+  GetEventsByUserParams,
   UpdateEventParams,
 } from "@/types"
 import { connectToDatabase } from "../database"
@@ -209,5 +210,33 @@ export async function deleteEvent({
   } catch (error) {
     console.log(error)
     throw new Error("Failed to delete event")
+  }
+}
+
+export async function getEventsByUser({
+  id,
+  limit = 6,
+  page,
+}: GetEventsByUserParams) {
+  try {
+    await connectToDatabase()
+
+    const conditions = { organizer: id }
+    const skipAmount = (page - 1) * limit
+
+    const eventsQuery = Event.find(conditions)
+      .sort({ createdAt: "desc" })
+      .skip(skipAmount)
+      .limit(limit)
+
+    const events = await populateEvent(eventsQuery)
+    const eventsCount = await Event.countDocuments(conditions)
+
+    return {
+      data: JSON.parse(JSON.stringify(events)),
+      totalPages: Math.ceil(eventsCount / limit),
+    }
+  } catch (error) {
+    handleError(error)
   }
 }
