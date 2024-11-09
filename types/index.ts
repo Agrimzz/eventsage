@@ -47,6 +47,7 @@ export type Organizer = {
   _id: string
   username: string
   email: string
+  image: string
 }
 
 export type EventDetails = {
@@ -62,6 +63,7 @@ export type EventDetails = {
   mapLink: string
   url: string
   price: number
+  views: number
   ticketDate: string
   organizer: Organizer
   createdAt: string

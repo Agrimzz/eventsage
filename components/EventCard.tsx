@@ -1,33 +1,49 @@
+import { auth } from "@/auth"
 import { formatDate } from "@/lib/utlis"
 import { EventDetails } from "@/types"
-import { IconEye } from "@tabler/icons-react"
+import { IconEdit, IconEye } from "@tabler/icons-react"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
+import DeleteConfirmation from "./DeleteConfirmation"
 
-const EventCard = ({ event }: { event: EventDetails }) => {
+const EventCard = async ({ event }: { event: EventDetails }) => {
   const {
     _id,
     title,
     description,
     imageUrl,
     startDateTime,
-    endDateTime,
-    location,
     category,
-    ticketDate,
     price,
     views,
-    url,
     organizer: { _id: organizerId, username, image },
   } = event
+
+  const session = await auth()
+
+  const userId = session?.user?.id as string
+
+  const isOrganizer = userId === organizerId
+
   return (
-    <li className="event-card group">
+    <li className="event-card group relative">
       <div className="flex-between">
         <p className="event-card_date">{formatDate(startDateTime)}</p>
         <div className="flex gap-1.5">
-          <IconEye color="#2B64EE" />
-          <span className="font-medium text-base">{views} views</span>
+          {isOrganizer ? (
+            <>
+              <Link href={`/events/${_id}/update`}>
+                <IconEdit color="green" />
+              </Link>
+              <DeleteConfirmation id={_id} />
+            </>
+          ) : (
+            <>
+              <IconEye color="#2B64EE" />
+              <span className="font-medium text-base">{views} views</span>
+            </>
+          )}
         </div>
       </div>
 
@@ -54,6 +70,7 @@ const EventCard = ({ event }: { event: EventDetails }) => {
 
       <Link href={`/events/${_id}`}>
         <p className="event-card_desc">{description}</p>
+
         <p className="font-bold my-3 text-xl">
           {price === 0 ? "Free" : `Rs. ${price}`}
         </p>

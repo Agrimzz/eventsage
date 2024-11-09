@@ -3,6 +3,7 @@ import "./globals.css"
 import "@mantine/core/styles.css"
 import "@mantine/dates/styles.css"
 import { MantineProvider } from "@mantine/core"
+import { ModalsProvider } from "@mantine/modals"
 
 export const metadata: Metadata = {
   title: "Eventsage",
@@ -17,7 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <MantineProvider>{children}</MantineProvider>
+        <MantineProvider>
+          <ModalsProvider>{children}</ModalsProvider>
+        </MantineProvider>
       </body>
     </html>
   )

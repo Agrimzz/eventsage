@@ -39,6 +39,10 @@ const EventSchema = new Schema<IEvent>(
   }
 )
 
+// if (models.Event) {
+//   delete models.Event;
+// }
+
 const Event = models.Event || model<IEvent>("Event", EventSchema)
 
 export default Event

@@ -120,3 +120,14 @@ export const incrementEventViews = async (eventId: string) => {
     throw new Error("Failed to increment event views")
   }
 }
+
+export async function deleteEvent(eventId: string, path: string) {
+  try {
+    await connectToDatabase()
+    const deletedEvent = await Event.findByIdAndDelete(eventId)
+    if (deletedEvent) revalidatePath(path)
+  } catch (error) {
+    console.log(error)
+    throw new Error("Failed to delete event")
+  }
+}
