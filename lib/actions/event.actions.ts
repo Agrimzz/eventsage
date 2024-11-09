@@ -1,6 +1,6 @@
 "use server"
 
-import { CreateEventParams } from "@/types"
+import { CreateEventParams, GetAllEventsParams } from "@/types"
 import { connectToDatabase } from "../database"
 import User from "../database/models/user.model"
 import { promises as fs } from "fs"
@@ -67,6 +67,32 @@ export const getEventById = async (id: string) => {
     await connectToDatabase()
     const event = await populateEvent(Event.findById(id))
     return JSON.parse(JSON.stringify(event))
+  } catch (error) {
+    console.log(error)
+    throw new Error("Failed to get event")
+  }
+}
+
+export const getAllEvents = async ({
+  query,
+  limit = 6,
+  page = 1,
+  category,
+}: GetAllEventsParams) => {
+  try {
+    await connectToDatabase()
+    const conditions = {}
+    const eventQuery = Event.find(conditions)
+      .sort({ createdAt: "desc" })
+      .skip(0)
+      .limit(limit)
+
+    const events = await populateEvent(eventQuery)
+    const eventsCount = await Event.countDocuments(conditions)
+    return {
+      data: JSON.parse(JSON.stringify(events)),
+      totalPages: Math.ceil(eventsCount / limit),
+    }
   } catch (error) {
     console.log(error)
     throw new Error("Failed to get event")

@@ -1,0 +1,78 @@
+import { formatDate } from "@/lib/utlis"
+import { EventDetails } from "@/types"
+import { IconEye } from "@tabler/icons-react"
+import Image from "next/image"
+import Link from "next/link"
+import React from "react"
+
+const EventCard = ({ event }: { event: EventDetails }) => {
+  const {
+    _id,
+    title,
+    description,
+    imageUrl,
+    startDateTime,
+    endDateTime,
+    location,
+    category,
+    ticketDate,
+    price,
+    url,
+    organizer: { _id: organizerId, username, image },
+  } = event
+  return (
+    <li className="event-card group">
+      <div className="flex-between">
+        <p className="event-card_date">{formatDate(startDateTime)}</p>
+        <div className="flex gap-1.5">
+          <IconEye color="#2B64EE" />
+          <span className="font-medium text-base">2 views</span>
+        </div>
+      </div>
+
+      <div className="flex-between mt-5 gap-5">
+        <div className="flex-1">
+          <Link href={`/user/${organizerId}`}>
+            <p className="font-medium text-base">@{username}</p>
+          </Link>
+          <h3 className="text-2xl font-semibold line-clamp-1">
+            <Link href={`/events/${_id}`}>{title}</Link>
+          </h3>
+        </div>
+
+        <Link href={`/user/${organizerId}`}>
+          <Image
+            src={image}
+            alt={username}
+            width={48}
+            height={48}
+            className="rounded-full"
+          />
+        </Link>
+      </div>
+
+      <Link href={`/events/${_id}`}>
+        <p className="event-card_desc">{description}</p>
+        <p className="font-bold my-3 text-xl">
+          {price === 0 ? "Free" : `Rs. ${price}`}
+        </p>
+
+        <img
+          src={`/eventImages/${imageUrl}`}
+          alt={title}
+          className="event-card_img"
+        />
+      </Link>
+
+      <div className="flex-between mt-5 gap-3">
+        <p className="font-medium text-base">{category}</p>
+
+        <button className="event-card_btn">
+          <Link href={`/events/${_id}`}>Details</Link>
+        </button>
+      </div>
+    </li>
+  )
+}
+
+export default EventCard
