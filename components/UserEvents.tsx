@@ -1,5 +1,4 @@
 import { getEventsByUser } from "@/lib/actions/event.actions"
-import { get } from "http"
 import React from "react"
 import EventCard from "./EventCard"
 import { EventDetails } from "@/types"

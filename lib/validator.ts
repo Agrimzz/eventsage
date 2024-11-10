@@ -20,3 +20,9 @@ export const eventFormSchema = z.object({
   views: z.number(),
   url: z.string().url().optional(),
 })
+
+export const userFormSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  email: z.string().email(),
+  image: z.instanceof(File).or(z.string()).or(z.null()),
+})

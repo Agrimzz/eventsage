@@ -17,7 +17,7 @@ type EventFormProps = {
   event?: IEvent
 }
 
-const formStyles = {
+export const formStyles = {
   label: {
     fontWeight: "bold",
     fontSize: "18px",

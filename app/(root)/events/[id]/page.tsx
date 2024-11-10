@@ -5,7 +5,7 @@ import Link from "next/link"
 import React from "react"
 import markdownit from "markdown-it"
 import { notFound } from "next/navigation"
-import { IconCalendarCheck, IconMapPin, IconPin } from "@tabler/icons-react"
+import { IconCalendarCheck, IconMapPin } from "@tabler/icons-react"
 import View from "@/components/View"
 
 const md = markdownit()
@@ -41,7 +41,7 @@ const EventDetails = async ({
           <div className="space-y-5  max-w-4xl ">
             <div className="flex-between gap-5">
               <Link
-                href={`/events/${event.organizer._id}`}
+                href={`/profile/${event.organizer._id}`}
                 className="flex gap-2 items-center mb-3"
               >
                 <Image
@@ -68,8 +68,8 @@ const EventDetails = async ({
             <div className="flex items-center gap-2">
               <IconCalendarCheck />
               <p className="text-base font-semibold">
-                {formatDateTime(event.endDateTime)} -{" "}
-                {formatDateTime(event.startDateTime)}
+                {formatDateTime(event.startDateTime)} -{" "}
+                {formatDateTime(event.endDateTime)}
               </p>
             </div>
             <h3 className="text-3xl font-bold">Location</h3>

@@ -1,6 +1,7 @@
 import Link from "next/link"
-import Image from "next/image"
 import { auth, signOut, signIn } from "@/auth"
+
+import ProfileMenu from "./ProfileMenu"
 
 const Navbar = async () => {
   const session = await auth()
@@ -32,15 +33,11 @@ const Navbar = async () => {
                   <span className="max-sm:hidden">Logout</span>
                 </button>
               </form>
-              <Link href="/profile">
-                <Image
-                  src={session.user.image || ""}
-                  alt={session.user.name || ""}
-                  width={50}
-                  height={50}
-                  className="rounded-full"
-                />
-              </Link>
+              <ProfileMenu
+                id={session.user.id as string}
+                image={session.user.image as string}
+                name={session.user.name as string}
+              />
             </>
           ) : (
             <form

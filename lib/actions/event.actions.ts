@@ -237,6 +237,6 @@ export async function getEventsByUser({
       totalPages: Math.ceil(eventsCount / limit),
     }
   } catch (error) {
-    handleError(error)
+    console.log(error)
   }
 }
