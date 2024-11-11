@@ -30,7 +30,7 @@ const ProfilePage = async () => {
               <EventCard key={order._id} event={order} />
             ))
           ) : (
-            <p>
+            <p className="no-results">
               No tickets found <Link href="/">Browse Events</Link>
             </p>
           )}

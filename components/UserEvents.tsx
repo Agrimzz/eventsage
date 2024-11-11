@@ -13,7 +13,7 @@ const UserEvents = async ({ id }: { id: string }) => {
           <EventCard key={event._id} event={event} />
         ))
       ) : (
-        <p>
+        <p className="no-results">
           No events found<Link href="/events/create">Create Events</Link>
         </p>
       )}

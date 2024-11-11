@@ -141,29 +141,40 @@ export const getEventById = async (id: string) => {
   }
 }
 
-export const getAllEvents = async ({
+export async function getAllEvents({
   query,
   limit = 6,
-  page = 1,
+  page,
   category,
-}: GetAllEventsParams) => {
+}: GetAllEventsParams) {
   try {
     await connectToDatabase()
-    const conditions = {}
-    const eventQuery = Event.find(conditions)
+
+    const titleCondition = query
+      ? { title: { $regex: query, $options: "i" } }
+      : {}
+
+    const categoryCondition = category ? { category: category } : {}
+
+    const conditions = {
+      $and: [titleCondition, categoryCondition],
+    }
+
+    const skipAmount = (Number(page) - 1) * limit
+    const eventsQuery = Event.find(conditions)
       .sort({ createdAt: "desc" })
-      .skip(0)
+      .skip(skipAmount)
       .limit(limit)
 
-    const events = await populateEvent(eventQuery)
+    const events = await populateEvent(eventsQuery)
     const eventsCount = await Event.countDocuments(conditions)
+
     return {
       data: JSON.parse(JSON.stringify(events)),
       totalPages: Math.ceil(eventsCount / limit),
     }
   } catch (error) {
     console.log(error)
-    throw new Error("Failed to get event")
   }
 }
 

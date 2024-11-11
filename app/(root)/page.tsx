@@ -1,5 +1,5 @@
 import EventCard from "@/components/EventCard"
-import SearchInput from "@/components/SearchInput"
+import SearchInput from "@/components/SearchForm"
 import { getAllEvents } from "@/lib/actions/event.actions"
 import { EventDetails } from "@/types"
 import React from "react"
@@ -26,12 +26,12 @@ export default async function Home() {
       <section className="section_container">
         <p className="text-3xl font-semibold">Latest Events</p>
         <ul className="mt-7 card_grid">
-          {events.data.length > 0 ? (
-            events.data.map((event: EventDetails) => (
+          {events?.data.length > 0 ? (
+            events?.data.map((event: EventDetails) => (
               <EventCard key={event._id} event={event} />
             ))
           ) : (
-            <p>No events found</p>
+            <p className="no-results">No events found</p>
           )}
         </ul>
       </section>
