@@ -1,9 +1,5 @@
 import { getEventById } from "@/lib/actions/event.actions"
-import {
-  formatDate,
-  formatDateTime,
-  generateMapEmbedUrlFromLink,
-} from "@/lib/utlis"
+import { formatDate, formatDateTime } from "@/lib/utlis"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
@@ -13,6 +9,7 @@ import { IconCalendarCheck, IconMapPin } from "@tabler/icons-react"
 import View from "@/components/View"
 import { auth } from "@/auth"
 import Checkout from "@/components/Checkout"
+import LocationMap from "@/components/LocationMap"
 
 const md = markdownit()
 
@@ -102,12 +99,11 @@ const EventDetails = async ({
 
             <h3 className="text-3xl font-bold">Map</h3>
 
-            <iframe
-              width="100%"
-              height="600"
-              src={generateMapEmbedUrlFromLink(event.mapLink) || ""}
-              className="rounded-xl"
-            ></iframe>
+            <LocationMap
+              longitude={event.longitude}
+              latitude={event.latitude}
+              location={event.location}
+            />
           </div>
           <div className="w-[400px] sticky top-20 border border-black/10 rounded-xl shadow-sm flex justify-center items-center h-[200px] flex-col space-y-3 p-5 max-sm:hidden">
             <p className="text-xl font-bold">

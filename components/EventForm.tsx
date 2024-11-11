@@ -10,6 +10,8 @@ import { createEvent, updateEvent } from "@/lib/actions/event.actions"
 import { useRouter } from "next/navigation"
 import { IEvent } from "@/lib/database/models/event.model"
 import { categories } from "@/constants"
+import LocationInput from "./LocationInput"
+import { LatLng } from "leaflet"
 
 type EventFormProps = {
   userId: string
@@ -49,6 +51,8 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
       url: event?.url || "",
       price: event?.price || 0,
       views: event?.views || 0,
+      longitude: event?.longitude || 0,
+      latitude: event?.latitude || 0,
       ticketDate: event ? new Date(event.ticketDate) : new Date(),
       ...(type === "update" && { prevImageUrl: event?.imageUrl || "" }),
     },
@@ -61,6 +65,10 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
       form.setFieldValue("imageUrl", image)
     }
   }, [image])
+
+  useEffect(() => {
+    console.log(form.values.longitude, form.values.latitude)
+  }, [form.values.longitude, form.values.latitude])
 
   async function handleSubmit() {
     if (type === "create") {
@@ -149,14 +157,24 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
           {...form.getInputProps("endDateTime")}
         />
 
-        <TextInput
+        {/* <TextInput
           label="Location"
           placeholder="Location"
           size="lg"
           styles={formStyles}
           {...form.getInputProps("location")}
+        /> */}
+        <LocationInput
+          setLatLong={(latLng: LatLng) => {
+            form.setFieldValue("latitude", latLng.lat)
+            form.setFieldValue("longitude", latLng.lng)
+          }}
+          longitude={form.getInputProps("longitude").value}
+          latitude={form.getInputProps("latitude").value}
+          setLocation={(location: string) => {
+            form.setFieldValue("location", location)
+          }}
         />
-
         <TextInput
           label="URL"
           placeholder="URL"

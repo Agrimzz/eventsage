@@ -7,8 +7,6 @@ import {
 } from "@/types"
 import { connectToDatabase } from "../database"
 import Order from "../database/models/order.models"
-import User from "../database/models/user.model"
-import Event from "../database/models/event.model"
 import { ObjectId } from "mongodb"
 
 export const createOrder = async (order: CreateOrderParams) => {
@@ -33,37 +31,57 @@ export const createOrder = async (order: CreateOrderParams) => {
 export async function getOrdersByUser({
   userId,
   limit = 3,
-  page,
 }: GetOrdersByUserParams) {
   try {
     await connectToDatabase()
 
-    const skipAmount = (Number(page) - 1) * limit
-    const conditions = { buyer: userId }
+    const userObjectId = new ObjectId(userId)
 
-    const orders = await Order.distinct("event._id")
-      .find(conditions)
-      .sort({ createdAt: "desc" })
-      .skip(skipAmount)
-      .limit(limit)
-      .populate({
-        path: "event",
-        model: Event,
-        populate: {
-          path: "organizer",
-          model: User,
-          select: "_id username image",
+    const orders = await Order.aggregate([
+      {
+        $match: { buyer: userObjectId },
+      },
+      {
+        $lookup: {
+          from: "events",
+          localField: "event",
+          foreignField: "_id",
+          as: "event",
         },
-      })
+      },
+      {
+        $unwind: "$event",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "event.organizer",
+          foreignField: "_id",
+          as: "organizer",
+        },
+      },
+      {
+        $unwind: "$organizer",
+      },
+      {
+        $project: {
+          _id: 1,
+          totalAmount: 1,
+          createdAt: 1,
+          eventId: "$event._id",
+          eventTitle: "$event.title",
+          eventDateTime: "$event.startDateTime",
+          organizerId: "$organizer._id",
+          organizer: "$organizer.username",
+        },
+      },
 
-    const ordersCount = await Order.distinct("event._id").countDocuments(
-      conditions
-    )
+      {
+        $limit: limit,
+      },
+    ])
 
-    return {
-      data: JSON.parse(JSON.stringify(orders)),
-      totalPages: Math.ceil(ordersCount / limit),
-    }
+    return JSON.parse(JSON.stringify(orders))
   } catch (error) {
     console.log(error)
   }

@@ -14,6 +14,8 @@ export interface IEvent extends Document {
   price: number
   ticketDate: Date
   views: number
+  longitude: number
+  latitude: number
   organizer: { _id: string; username: string; email: string }
 }
 
@@ -32,6 +34,8 @@ const EventSchema = new Schema<IEvent>(
     price: { type: Number, required: true, max: 5000 },
     ticketDate: { type: Date, required: true },
     views: { type: Number, default: 0 },
+    longitude: { type: Number, required: true },
+    latitude: { type: Number, required: true },
     organizer: { type: Schema.Types.ObjectId, ref: "Users" },
   },
   {
@@ -40,7 +44,7 @@ const EventSchema = new Schema<IEvent>(
 )
 
 // if (models.Event) {
-//   delete models.Event;
+//   delete models.Event
 // }
 
 const Event = models.Event || model<IEvent>("Event", EventSchema)

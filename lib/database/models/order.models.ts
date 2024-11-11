@@ -21,6 +21,17 @@ export type IOrderItem = {
   buyerId: string
 }
 
+export type ITicketItem = {
+  _id: string
+  totalAmount: string
+  createdAt: string
+  eventTitle: string
+  eventId: string
+  organizer: string
+  organizerId: string
+  eventDateTime: string
+}
+
 const OrderSchema = new Schema<IOrder>(
   {
     tid: { type: String, required: true },

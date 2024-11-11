@@ -14,7 +14,13 @@ const UserEvents = async ({ id }: { id: string }) => {
         ))
       ) : (
         <p className="no-results">
-          No events found<Link href="/events/create">Create Events</Link>
+          No events found {""}
+          <Link
+            href="/events/create"
+            className="underline font-bold text-primary"
+          >
+            Create Events
+          </Link>
         </p>
       )}
     </>

@@ -1,4 +1,5 @@
 import EventCard from "@/components/EventCard"
+import LeafletMap from "@/components/LeafletMap"
 import SearchInput from "@/components/SearchForm"
 import { getAllEvents } from "@/lib/actions/event.actions"
 import { EventDetails } from "@/types"
@@ -35,6 +36,8 @@ export default async function Home() {
           )}
         </ul>
       </section>
+
+      <LeafletMap />
     </>
   )
 }
