@@ -1,7 +1,7 @@
 import { auth } from "@/auth"
 import { formatDate } from "@/lib/utlis"
 import { EventDetails } from "@/types"
-import { IconEdit, IconEye } from "@tabler/icons-react"
+import { IconArrowUpRight, IconEdit, IconEye } from "@tabler/icons-react"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
@@ -89,6 +89,15 @@ const EventCard = async ({ event }: { event: EventDetails }) => {
           <Link href={`/events/${_id}`}>Details</Link>
         </button>
       </div>
+      {isOrganizer && (
+        <Link
+          href={`/orders?eventId=${event._id}`}
+          className="flex gap-2 justify-end mt-5"
+        >
+          <p className="text-primary">Order Details</p>
+          <IconArrowUpRight color="#2B64EE" />
+        </Link>
+      )}
     </li>
   )
 }

@@ -1,5 +1,9 @@
 import { getEventById } from "@/lib/actions/event.actions"
-import { formatDate, formatDateTime } from "@/lib/utlis"
+import {
+  formatDate,
+  formatDateTime,
+  generateMapEmbedUrlFromLink,
+} from "@/lib/utlis"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
@@ -7,6 +11,8 @@ import markdownit from "markdown-it"
 import { notFound } from "next/navigation"
 import { IconCalendarCheck, IconMapPin } from "@tabler/icons-react"
 import View from "@/components/View"
+import { auth } from "@/auth"
+import Checkout from "@/components/Checkout"
 
 const md = markdownit()
 
@@ -15,6 +21,9 @@ const EventDetails = async ({
 }: {
   params: Promise<{ id: string }>
 }) => {
+  const session = await auth()
+  const userId = session?.user?.id as string
+
   const id = (await params).id
 
   const event = await getEventById(id)
@@ -91,16 +100,26 @@ const EventDetails = async ({
               <p className="no-result">No details provided.</p>
             )}
 
-            {/* <h3 className="text-3xl font-bold">Map</h3> */}
-            {/* TODO: Add map */}
+            <h3 className="text-3xl font-bold">Map</h3>
+
+            <iframe
+              width="100%"
+              height="600"
+              src={generateMapEmbedUrlFromLink(event.mapLink) || ""}
+              className="rounded-xl"
+            ></iframe>
           </div>
           <div className="w-[400px] sticky top-20 border border-black/10 rounded-xl shadow-sm flex justify-center items-center h-[200px] flex-col space-y-3 p-5 max-sm:hidden">
             <p className="text-xl font-bold">
               {event.price === 0 ? "Free" : `Rs.${event.price}`}
             </p>
-            <button className="bg-primary text-white w-full py-3 rounded-full hover:bg-primary/80">
-              Buy Tickets
-            </button>
+            <Checkout event={event} userId={userId} />
+
+            {!userId && (
+              <p className="text-xs text-black/60 ">
+                Please Login to get Tickets
+              </p>
+            )}
             <p className="text-xs text-black/60 ">
               Ticket sale ends at{" "}
               <span className="font-bold">

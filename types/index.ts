@@ -81,3 +81,26 @@ export type EventDetails = {
   createdAt: string
   updatedAt: string
 }
+
+export type CreateOrderParams = {
+  tid: string
+  eventId: string
+  buyerId: string
+  totalAmount: string
+}
+
+export type GetOrdersByEventParams = {
+  eventId: string
+  searchString: string
+}
+
+export type GetOrdersByUserParams = {
+  userId: string | null
+  limit?: number
+  page: string | number | null
+}
+
+export type SearchParamProps = {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
