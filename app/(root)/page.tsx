@@ -1,12 +1,12 @@
 import EventCard from "@/components/EventCard"
 import LeafletMap from "@/components/LeafletMap"
 import SearchInput from "@/components/SearchForm"
-import { getAllEvents } from "@/lib/actions/event.actions"
+import { getAllEvents, getLatestEvents } from "@/lib/actions/event.actions"
 import { EventDetails } from "@/types"
 import React from "react"
 
 export default async function Home() {
-  const events = await getAllEvents({
+  const events = await getLatestEvents({
     query: "",
     category: "",
     page: 1,

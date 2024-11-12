@@ -5,6 +5,7 @@ import {
   DeleteEventParams,
   GetAllEventsParams,
   GetEventsByUserParams,
+  GetRelatedEventsByCategoryParams,
   UpdateEventParams,
 } from "@/types"
 import { connectToDatabase } from "../database"
@@ -234,6 +235,83 @@ export async function getEventsByUser({
 
     const conditions = { organizer: id }
     const skipAmount = (page - 1) * limit
+
+    const eventsQuery = Event.find(conditions)
+      .sort({ createdAt: "desc" })
+      .skip(skipAmount)
+      .limit(limit)
+
+    const events = await populateEvent(eventsQuery)
+    const eventsCount = await Event.countDocuments(conditions)
+
+    return {
+      data: JSON.parse(JSON.stringify(events)),
+      totalPages: Math.ceil(eventsCount / limit),
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function getLatestEvents({
+  query,
+  limit = 6,
+  page,
+  category,
+}: GetAllEventsParams) {
+  try {
+    await connectToDatabase()
+
+    const currentDate = new Date()
+
+    const titleCondition = query
+      ? { title: { $regex: query, $options: "i" } }
+      : {}
+
+    const categoryCondition = category ? { category } : {}
+
+    // Condition to filter events whose end date has not passed
+    const dateCondition = { endDateTime: { $gte: currentDate } }
+
+    const conditions = {
+      $and: [titleCondition, categoryCondition, dateCondition],
+    }
+
+    const skipAmount = (Number(page) - 1) * limit
+
+    const eventsQuery = Event.find(conditions)
+      .sort({ startDateTime: 1 }) // Sort by start date in ascending order
+      .skip(skipAmount)
+      .limit(limit)
+
+    const events = await populateEvent(eventsQuery)
+    const eventsCount = await Event.countDocuments(conditions)
+
+    return {
+      data: JSON.parse(JSON.stringify(events)),
+      totalPages: Math.ceil(eventsCount / limit),
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function getRelatedEventsByCategory({
+  category,
+  eventId,
+  limit = 3,
+  page = 1,
+}: GetRelatedEventsByCategoryParams) {
+  try {
+    await connectToDatabase()
+    const currentDate = new Date()
+
+    const skipAmount = (Number(page) - 1) * limit
+    const dateCondition = { endDateTime: { $gte: currentDate } }
+    // Use the category name directly to filter and exclude the current event by its _id
+    const conditions = {
+      $and: [{ category }, { _id: { $ne: eventId } }, dateCondition],
+    }
 
     const eventsQuery = Event.find(conditions)
       .sort({ createdAt: "desc" })

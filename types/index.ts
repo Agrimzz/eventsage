@@ -103,3 +103,10 @@ export type SearchParamProps = {
   params: { id: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
+
+export type GetRelatedEventsByCategoryParams = {
+  category: string
+  eventId: string
+  limit?: number
+  page: number | string
+}

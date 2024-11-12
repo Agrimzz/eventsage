@@ -7,7 +7,6 @@ const Checkout = ({ event, userId }: { event: IEvent; userId: string }) => {
   const ticketStatus = new Date(event.ticketDate) < new Date()
   const isDisabled = isOrganizer || !userId || ticketStatus
 
-  console.log(ticketStatus)
   const esewaMerchantCode = "EPAYTEST"
   const transactionId = `${event._id}_${userId}_${Date.now()}`
   const successUrl = `http://localhost:3000/payment-success?tid=${transactionId}&eid=${event._id}&uid=${userId}&price=${event.price}`

@@ -1,4 +1,7 @@
-import { getEventById } from "@/lib/actions/event.actions"
+import {
+  getEventById,
+  getRelatedEventsByCategory,
+} from "@/lib/actions/event.actions"
 import { formatDate, formatDateTime } from "@/lib/utlis"
 import Image from "next/image"
 import Link from "next/link"
@@ -10,6 +13,8 @@ import View from "@/components/View"
 import { auth } from "@/auth"
 import Checkout from "@/components/Checkout"
 import LocationMap from "@/components/LocationMap"
+import EventCard from "@/components/EventCard"
+import { EventDetails } from "@/types"
 
 const md = markdownit()
 
@@ -25,6 +30,13 @@ const EventDetails = async ({
 
   const event = await getEventById(id)
   const ticketStatus = new Date(event.ticketDate) < new Date()
+
+  const relatedEvents = await getRelatedEventsByCategory({
+    category: event.category,
+    eventId: id,
+    limit: 2,
+    page: 1,
+  })
 
   if (!event) return notFound()
 
@@ -127,6 +139,16 @@ const EventDetails = async ({
         </div>
         <hr className="divider" />
       </section>
+      {relatedEvents?.data.length > 0 && (
+        <div className="section_container">
+          <p className="text-3xl font-semibold">Related Events</p>
+          <ul className="mt-7 card_grid">
+            {relatedEvents?.data.map((event: EventDetails) => (
+              <EventCard key={event._id} event={event} />
+            ))}
+          </ul>
+        </div>
+      )}
       <View id={event._id} views={event.views} />
     </>
   )
