@@ -314,7 +314,7 @@ export async function getRelatedEventsByCategory({
     }
 
     const eventsQuery = Event.find(conditions)
-      .sort({ createdAt: "desc" })
+      .sort({ views: "desc" })
       .skip(skipAmount)
       .limit(limit)
 
