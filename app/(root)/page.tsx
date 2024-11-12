@@ -1,7 +1,8 @@
+import Categories from "@/components/Categories"
 import EventCard from "@/components/EventCard"
 import LeafletMap from "@/components/LeafletMap"
 import SearchInput from "@/components/SearchForm"
-import { getAllEvents, getLatestEvents } from "@/lib/actions/event.actions"
+import { getLatestEvents } from "@/lib/actions/event.actions"
 import { EventDetails } from "@/types"
 import React from "react"
 
@@ -25,7 +26,7 @@ export default async function Home() {
       </section>
 
       <section className="section_container">
-        <p className="text-3xl font-semibold">Latest Events</p>
+        <p className="text-3xl font-semibold mt">Latest Events</p>
         <ul className="mt-7 card_grid">
           {events?.data.length > 0 ? (
             events?.data.map((event: EventDetails) => (
@@ -38,6 +39,11 @@ export default async function Home() {
       </section>
 
       <LeafletMap events={events?.data} />
+
+      <section className="section_container">
+        <p className="text-3xl font-semibold">Browse by categories</p>
+        <Categories />
+      </section>
     </>
   )
 }

@@ -3,7 +3,7 @@ import Form from "next/form"
 import { IconSearch } from "@tabler/icons-react"
 import SearchFormReset from "./SearchFormReset"
 import { Select } from "@mantine/core"
-import { categories } from "@/constants"
+import { categoryLabels } from "@/constants"
 const SearchForm = ({
   query,
   category,
@@ -25,7 +25,7 @@ const SearchForm = ({
 
       {showCategory && (
         <Select
-          data={categories}
+          data={categoryLabels}
           placeholder="Category"
           defaultValue={category}
           name="category"

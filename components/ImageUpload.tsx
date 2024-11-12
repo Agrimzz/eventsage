@@ -2,7 +2,7 @@ import { FileButton } from "@mantine/core"
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react"
 
 type ImageUploadProps = {
-  setImage: Dispatch<SetStateAction<File | null>>
+  setImage: Dispatch<SetStateAction<File | null | string>>
   currentImageUrl?: string | null // To accept the current image URL for edit mode
 }
 

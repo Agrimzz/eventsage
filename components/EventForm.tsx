@@ -9,7 +9,7 @@ import { eventFormSchema } from "@/lib/validator"
 import { createEvent, updateEvent } from "@/lib/actions/event.actions"
 import { useRouter } from "next/navigation"
 import { IEvent } from "@/lib/database/models/event.model"
-import { categories } from "@/constants"
+import { categoryLabels } from "@/constants"
 import LocationInput from "./LocationInput"
 import { LatLng } from "leaflet"
 
@@ -139,7 +139,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
         <Select
           label="Category"
           placeholder="Select category"
-          data={categories}
+          data={categoryLabels}
           size="lg"
           styles={{ ...formStyles, dropdown: { border: "3px solid black" } }}
           {...form.getInputProps("category")}
