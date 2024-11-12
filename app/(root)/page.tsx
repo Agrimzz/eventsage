@@ -10,7 +10,7 @@ export default async function Home() {
     query: "",
     category: "",
     page: 1,
-    limit: 6,
+    limit: 3,
   })
 
   return (

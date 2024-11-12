@@ -22,14 +22,21 @@ const EventCard = async ({ event }: { event: EventDetails }) => {
 
   const session = await auth()
 
+  const ticketStatus = new Date(event.ticketDate) < new Date()
+  const eventEnded = new Date(event.endDateTime) < new Date()
+
   const userId = session?.user?.id as string
 
   const isOrganizer = userId === organizerId
 
   return (
-    <li className="event-card group relative">
+    <li
+      className={`event-card group relative ${eventEnded && " !bg-primary/10"}`}
+    >
       <div className="flex-between">
-        <p className="event-card_date">{formatDate(startDateTime)}</p>
+        <p className="event-card_date">
+          {ticketStatus ? "Ticket Sale Ended" : formatDate(startDateTime)}
+        </p>
         <div className="flex gap-1.5">
           {isOrganizer ? (
             <>
@@ -70,10 +77,13 @@ const EventCard = async ({ event }: { event: EventDetails }) => {
 
       <Link href={`/events/${_id}`}>
         <p className="event-card_desc">{description}</p>
-
-        <p className="font-bold my-3 text-xl">
-          {price === 0 ? "Free" : `Rs. ${price}`}
-        </p>
+        {eventEnded ? (
+          <p className="font-bold my-3 text-xl">Event Ended</p>
+        ) : (
+          <p className="font-bold my-3 text-xl">
+            {price === 0 ? "Free" : `Rs. ${price}`}
+          </p>
+        )}
 
         <img
           src={`/eventImages/${imageUrl}`}

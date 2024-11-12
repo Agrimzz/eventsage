@@ -88,7 +88,7 @@ function LocationMarker({
         const newMarker = L.marker([lat, lng]).addTo(markersLayerGroup)
 
         // Update map position and state variables
-        setLatLong(new L.LatLng(lat, lng))
+        setLatLong(new L.LatLng(lng, lat))
         setLocation(label)
       } else {
         console.error(

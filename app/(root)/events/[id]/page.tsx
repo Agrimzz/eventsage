@@ -30,6 +30,7 @@ const EventDetails = async ({
 
   const event = await getEventById(id)
   const ticketStatus = new Date(event.ticketDate) < new Date()
+  const eventEnded = new Date(event.endDateTime) < new Date()
 
   const relatedEvents = await getRelatedEventsByCategory({
     category: event.category,
@@ -119,9 +120,13 @@ const EventDetails = async ({
             />
           </div>
           <div className="w-[400px] sticky top-20 border border-black/10 rounded-xl shadow-sm flex justify-center items-center h-[200px] flex-col space-y-3 p-5 max-sm:hidden">
-            <p className="text-xl font-bold">
-              {event.price === 0 ? "Free" : `Rs.${event.price}`}
-            </p>
+            {eventEnded ? (
+              <p className="text-xl font-bold">Event Ended</p>
+            ) : (
+              <p className="text-xl font-bold">
+                {event.price === 0 ? "Free" : `Rs.${event.price}`}
+              </p>
+            )}
             <Checkout event={event} userId={userId} />
 
             {!userId && (
