@@ -12,19 +12,26 @@ import { OpenStreetMapProvider, GeoSearchControl } from "leaflet-geosearch"
 import "leaflet-geosearch/dist/geosearch.css"
 
 import L from "leaflet"
+import { IEvent } from "@/lib/database/models/event.model"
+import EventPopup from "./EventPopup"
+import { IconHomeFilled } from "@tabler/icons-react"
+import ReactDOMServer from "react-dom/server"
+
 L.Icon.Default.mergeOptions({
   iconUrl: require("leaflet/dist/images/marker-icon.png"),
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 })
 
-const LeafletMap = () => {
+const LeafletMap = ({ events }: { events: IEvent[] }) => {
+  const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null)
   const [position, setPosition] = useState<L.LatLng | null>(null)
+  console.log(events)
 
   return (
     <div className="section_container">
       <p className="text-3xl font-semibold mb-7">
-        {position ? "Events near you" : "Events near Kathmandu"}
+        Find the best events near you
       </p>
       <MapContainer
         center={[27.7103, 85.3222]}
@@ -42,6 +49,19 @@ const LeafletMap = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <LocationMarker position={position} setPosition={setPosition} />
+        {events.map((event: IEvent, i: number) => (
+          <Marker
+            key={i}
+            position={[event.longitude, event.latitude]}
+            eventHandlers={{
+              click: () => setSelectedEvent(event),
+            }}
+          >
+            <Popup>
+              {selectedEvent && <EventPopup event={selectedEvent} />}
+            </Popup>
+          </Marker>
+        ))}
       </MapContainer>
     </div>
   )
@@ -66,13 +86,20 @@ function LocationMarker({
     },
   })
 
+  const userLocationIcon = new L.DivIcon({
+    html: ReactDOMServer.renderToString(
+      <IconHomeFilled color="#2B64EE" size={32} />
+    ),
+    className: "",
+    iconSize: [50, 50],
+  })
   useEffect(() => {
     const provider = new OpenStreetMapProvider()
     //@ts-expect-error it working
     const searchControl = new GeoSearchControl({
       provider,
-      style: "bar",
-      showMarker: true,
+      style: "icon",
+      showMarker: false,
       showPopup: true,
       marker: {
         icon: new L.Icon.Default(),
@@ -91,7 +118,7 @@ function LocationMarker({
   }, [map])
 
   return position === null ? null : (
-    <Marker position={position}>
+    <Marker position={position} icon={userLocationIcon}>
       <Popup>You are here</Popup>
     </Marker>
   )

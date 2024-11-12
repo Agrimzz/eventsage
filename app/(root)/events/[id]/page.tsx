@@ -24,6 +24,7 @@ const EventDetails = async ({
   const id = (await params).id
 
   const event = await getEventById(id)
+  const ticketStatus = new Date(event.ticketDate) < new Date()
 
   if (!event) return notFound()
 
@@ -117,7 +118,7 @@ const EventDetails = async ({
               </p>
             )}
             <p className="text-xs text-black/60 ">
-              Ticket sale ends at{" "}
+              Tickets sale {ticketStatus ? "ended" : "ends"} at{" "}
               <span className="font-bold">
                 {formatDateTime(event.ticketDate)}
               </span>

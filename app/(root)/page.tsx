@@ -37,7 +37,7 @@ export default async function Home() {
         </ul>
       </section>
 
-      <LeafletMap />
+      <LeafletMap events={events?.data} />
     </>
   )
 }

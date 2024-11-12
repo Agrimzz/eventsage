@@ -4,15 +4,21 @@ import React from "react"
 
 const Checkout = ({ event, userId }: { event: IEvent; userId: string }) => {
   const isOrganizer = userId === event.organizer._id
-  const isDisabled = isOrganizer || !userId
+  const ticketStatus = new Date(event.ticketDate) < new Date()
+  const isDisabled = isOrganizer || !userId || ticketStatus
 
+  console.log(ticketStatus)
   const esewaMerchantCode = "EPAYTEST"
   const transactionId = `${event._id}_${userId}_${Date.now()}`
   const successUrl = `http://localhost:3000/payment-success?tid=${transactionId}&eid=${event._id}&uid=${userId}&price=${event.price}`
   const failureUrl = "http://localhost:3000/payment-failure"
 
   return (
-    <form action="https://uat.esewa.com.np/epay/main" method="POST">
+    <form
+      action="https://uat.esewa.com.np/epay/main"
+      method="POST"
+      className="w-full"
+    >
       <input type="hidden" name="amt" value={event.price.toString()} />
       <input type="hidden" name="pdc" value="0" />
       <input type="hidden" name="psc" value="0" />

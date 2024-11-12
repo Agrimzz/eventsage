@@ -25,7 +25,7 @@ const LocationInput = ({
 }) => {
   return (
     <div>
-      <p className="text-lg font-bold">Locaiton</p>
+      <p className="text-lg font-bold">Location</p>
       <MapContainer
         center={[longitude || 27.7103, latitude || 85.3222]}
         zoom={13}
@@ -35,13 +35,14 @@ const LocationInput = ({
           width: "100%",
           position: "relative",
           borderRadius: "20px",
+          zIndex: 0,
         }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <LocationMarker setLatLong={setLatLong} setLocaiton={setLocation} />
+        <LocationMarker setLatLong={setLatLong} setLocation={setLocation} />
       </MapContainer>
     </div>
   )
@@ -51,10 +52,10 @@ export default LocationInput
 
 function LocationMarker({
   setLatLong,
-  setLocaiton,
+  setLocation,
 }: {
   setLatLong: (latLng: LatLng) => void
-  setLocaiton: (location: string) => void
+  setLocation: (location: string) => void
 }) {
   const map = useMapEvents({
     click(e) {
@@ -67,9 +68,9 @@ function LocationMarker({
     //@ts-expect-error it working
     const searchControl = new GeoSearchControl({
       provider,
-      style: "bar",
+      style: "icon",
       showMarker: false, // Disable automatic marker placement
-      showPopup: true,
+      showPopup: false,
       retainZoomLevel: true,
       animateZoom: true,
       keepResult: false,
@@ -77,13 +78,18 @@ function LocationMarker({
 
     map.addControl(searchControl)
 
+    const markersLayerGroup = L.layerGroup().addTo(map)
+
     map.on("geosearch/showlocation", (event: any) => {
       const { x: lng, y: lat, label } = event.location
       if (lat && lng && label) {
-        setLatLong(new L.LatLng(lng, lat))
-        L.marker([lat, lng]).addTo(map)
+        markersLayerGroup.clearLayers()
 
-        setLocaiton(label)
+        const newMarker = L.marker([lat, lng]).addTo(markersLayerGroup)
+
+        // Update map position and state variables
+        setLatLong(new L.LatLng(lat, lng))
+        setLocation(label)
       } else {
         console.error(
           "Search result did not return valid latitude and longitude"

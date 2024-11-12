@@ -35,7 +35,9 @@ export const formStyles = {
 const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
   // State to store the image preview URL
   const router = useRouter()
-  const [image, setImage] = useState<File | null>(null)
+  const [image, setImage] = useState<File | null | string>(
+    event?.imageUrl || null
+  )
 
   const form = useForm({
     initialValues: {
@@ -63,12 +65,11 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
     if (image) {
       //@ts-expect-error i dont know how to type this
       form.setFieldValue("imageUrl", image)
+    } else {
+      form.setFieldValue("imageUrl", null)
     }
+    console.log(image)
   }, [image])
-
-  useEffect(() => {
-    console.log(form.values.longitude, form.values.latitude)
-  }, [form.values.longitude, form.values.latitude])
 
   async function handleSubmit() {
     if (type === "create") {
@@ -122,6 +123,9 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
           setImage={setImage}
           currentImageUrl={event?.imageUrl || null}
         />
+        {form.errors.imageUrl && (
+          <p className="text-red-500 text-center">{form.errors.imageUrl}</p>
+        )}
       </div>
       <form className="event-form" onSubmit={form.onSubmit(handleSubmit)}>
         <TextInput
@@ -157,24 +161,22 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
           {...form.getInputProps("endDateTime")}
         />
 
-        {/* <TextInput
-          label="Location"
-          placeholder="Location"
-          size="lg"
-          styles={formStyles}
-          {...form.getInputProps("location")}
-        /> */}
-        <LocationInput
-          setLatLong={(latLng: LatLng) => {
-            form.setFieldValue("latitude", latLng.lat)
-            form.setFieldValue("longitude", latLng.lng)
-          }}
-          longitude={form.getInputProps("longitude").value}
-          latitude={form.getInputProps("latitude").value}
-          setLocation={(location: string) => {
-            form.setFieldValue("location", location)
-          }}
-        />
+        <div>
+          <LocationInput
+            setLatLong={(latLng: LatLng) => {
+              form.setFieldValue("latitude", latLng.lat)
+              form.setFieldValue("longitude", latLng.lng)
+            }}
+            longitude={form.getInputProps("longitude").value}
+            latitude={form.getInputProps("latitude").value}
+            setLocation={(location: string) => {
+              form.setFieldValue("location", location)
+            }}
+          />
+          {form.errors.location && (
+            <p className="text-red-500 ">{form.errors.location}</p>
+          )}
+        </div>
         <TextInput
           label="URL"
           placeholder="URL"
@@ -200,7 +202,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
           {...form.getInputProps("price")}
         />
         <DateTimePicker
-          maxDate={form.getInputProps("startDateTime").value as Date}
+          maxDate={form.getInputProps("endDateTime").value as Date}
           label="Ticket Sales End"
           placeholder="Sales End Date"
           styles={formStyles}
@@ -222,7 +224,6 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
           </label>
           <MDEditor
             value={form.values.info as string}
-            // onChange={(value) => setInfo(value as string)}
             id="info"
             preview="edit"
             height={300}
@@ -240,7 +241,6 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
             {...form.getInputProps("info" as string)}
           />
         </div>
-
         <button type="submit" className="event-form_btn text-white capitalize">
           {type} Event
         </button>
