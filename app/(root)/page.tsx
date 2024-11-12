@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import Categories from "@/components/Categories"
 import EventCard from "@/components/EventCard"
 import LeafletMap from "@/components/LeafletMap"
@@ -7,11 +8,14 @@ import { EventDetails } from "@/types"
 import React from "react"
 
 export default async function Home() {
+  const session = await auth()
+  const userId = session?.user?.id as string
+
   const events = await getLatestEvents({
     query: "",
     category: "",
     page: 1,
-    limit: 3,
+    limit: 6,
   })
 
   return (
@@ -30,7 +34,7 @@ export default async function Home() {
         <ul className="mt-7 card_grid">
           {events?.data.length > 0 ? (
             events?.data.map((event: EventDetails) => (
-              <EventCard key={event._id} event={event} />
+              <EventCard key={event._id} event={event} userId={userId} />
             ))
           ) : (
             <p className="no-results">No events found</p>
@@ -38,7 +42,7 @@ export default async function Home() {
         </ul>
       </section>
 
-      <LeafletMap events={events?.data} />
+      <LeafletMap events={events?.data} userId={userId} />
 
       <section className="section_container">
         <p className="text-3xl font-semibold">Browse by categories</p>

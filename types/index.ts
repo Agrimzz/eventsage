@@ -72,6 +72,8 @@ export type EventDetails = {
   startDateTime: string
   endDateTime: string
   location: string
+  latitude: number
+  longitude: number
   mapLink: string
   url: string
   price: number

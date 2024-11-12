@@ -53,8 +53,8 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
       url: event?.url || "",
       price: event?.price || 0,
       views: event?.views || 0,
-      longitude: event?.longitude || 0,
       latitude: event?.latitude || 0,
+      longitude: event?.longitude || 0,
       ticketDate: event ? new Date(event.ticketDate) : new Date(),
       ...(type === "update" && { prevImageUrl: event?.imageUrl || "" }),
     },
@@ -167,8 +167,8 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
               form.setFieldValue("latitude", latLng.lat)
               form.setFieldValue("longitude", latLng.lng)
             }}
-            longitude={form.getInputProps("longitude").value}
             latitude={form.getInputProps("latitude").value}
+            longitude={form.getInputProps("longitude").value}
             setLocation={(location: string) => {
               form.setFieldValue("location", location)
             }}

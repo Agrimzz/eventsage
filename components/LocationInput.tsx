@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect } from "react"
 import "leaflet/dist/leaflet.css"
-import { MapContainer, TileLayer, useMapEvents } from "react-leaflet"
+import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet"
 import { OpenStreetMapProvider, GeoSearchControl } from "leaflet-geosearch"
 import "leaflet-geosearch/dist/geosearch.css"
 import L, { LatLng } from "leaflet"
@@ -14,20 +14,20 @@ L.Icon.Default.mergeOptions({
 
 const LocationInput = ({
   setLatLong,
-  longitude,
   latitude,
+  longitude,
   setLocation,
 }: {
   setLatLong: (latLng: LatLng) => void
-  longitude: number
   latitude: number
+  longitude: number
   setLocation: (location: string) => void
 }) => {
   return (
     <div>
       <p className="text-lg font-bold">Location</p>
       <MapContainer
-        center={[longitude || 27.7103, latitude || 85.3222]}
+        center={[latitude || 27.7103, longitude || 85.3222]}
         zoom={13}
         scrollWheelZoom={false}
         style={{
@@ -43,6 +43,9 @@ const LocationInput = ({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <LocationMarker setLatLong={setLatLong} setLocation={setLocation} />
+        {longitude && latitude && (
+          <Marker position={[latitude, longitude]}></Marker>
+        )}
       </MapContainer>
     </div>
   )
@@ -88,7 +91,7 @@ function LocationMarker({
         const newMarker = L.marker([lat, lng]).addTo(markersLayerGroup)
 
         // Update map position and state variables
-        setLatLong(new L.LatLng(lng, lat))
+        setLatLong(new L.LatLng(lat, lng))
         setLocation(label)
       } else {
         console.error(

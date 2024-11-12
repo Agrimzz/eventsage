@@ -14,7 +14,7 @@ import { auth } from "@/auth"
 import Checkout from "@/components/Checkout"
 import LocationMap from "@/components/LocationMap"
 import EventCard from "@/components/EventCard"
-import { EventDetails } from "@/types"
+import { EventDetails as EventType } from "@/types"
 
 const md = markdownit()
 
@@ -57,7 +57,7 @@ const EventDetails = async ({
           alt={event.title}
           className="w-full h-auto rounded-xl"
         />
-        <div className="w-full flex justify-between  py-5 gap-5 relative">
+        <div className="w-full flex justify-between  py-5 gap-5 relative max-sm:flex-col">
           <div className="space-y-5  max-w-4xl ">
             <div className="flex-between gap-5">
               <Link
@@ -119,7 +119,7 @@ const EventDetails = async ({
               location={event.location}
             />
           </div>
-          <div className="w-[400px] sticky top-20 border border-black/10 rounded-xl shadow-sm flex justify-center items-center h-[200px] flex-col space-y-3 p-5 max-sm:hidden">
+          <div className="w-[400px] sticky top-20 border border-black/10 rounded-xl shadow-sm flex justify-center items-center h-[200px] flex-col space-y-3 p-5 max-sm:bottom-0 max-sm:bg-white max-sm:w-full">
             {eventEnded ? (
               <p className="text-xl font-bold">Event Ended</p>
             ) : (
@@ -148,7 +148,7 @@ const EventDetails = async ({
         <div className="section_container">
           <p className="text-3xl font-semibold">Related Events</p>
           <ul className="mt-7 card_grid">
-            {relatedEvents?.data.map((event: EventDetails) => (
+            {relatedEvents?.data.map((event: EventType) => (
               <EventCard key={event._id} event={event} />
             ))}
           </ul>

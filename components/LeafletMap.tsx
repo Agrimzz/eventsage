@@ -12,10 +12,12 @@ import { OpenStreetMapProvider, GeoSearchControl } from "leaflet-geosearch"
 import "leaflet-geosearch/dist/geosearch.css"
 
 import L from "leaflet"
-import { IEvent } from "@/lib/database/models/event.model"
 import EventPopup from "./EventPopup"
 import { IconHomeFilled } from "@tabler/icons-react"
 import ReactDOMServer from "react-dom/server"
+import NearEvents from "./NearEvents"
+import { findClosestEvents } from "@/lib/utlis"
+import { EventDetails } from "@/types"
 
 L.Icon.Default.mergeOptions({
   iconUrl: require("leaflet/dist/images/marker-icon.png"),
@@ -23,13 +25,20 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 })
 
-const LeafletMap = ({ events }: { events: IEvent[] }) => {
-  const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null)
+const LeafletMap = ({
+  events,
+  userId,
+}: {
+  events: EventDetails[]
+  userId: string
+}) => {
+  const [selectedEvent, setSelectedEvent] = useState<EventDetails | null>(null)
   const [position, setPosition] = useState<L.LatLng | null>(null)
-  console.log(events)
+  const closeEvents =
+    findClosestEvents(position?.lat, position?.lng, events, 50) || []
 
   return (
-    <div className="section_container">
+    <div className="section_container ">
       <p className="text-3xl font-semibold mb-7">
         Find the best events near you
       </p>
@@ -42,6 +51,7 @@ const LeafletMap = ({ events }: { events: IEvent[] }) => {
           width: "100%",
           position: "relative",
           borderRadius: "20px",
+          zIndex: 0,
         }}
       >
         <TileLayer
@@ -49,10 +59,10 @@ const LeafletMap = ({ events }: { events: IEvent[] }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <LocationMarker position={position} setPosition={setPosition} />
-        {events.map((event: IEvent, i: number) => (
+        {events.map((event: EventDetails, i: number) => (
           <Marker
             key={i}
-            position={[event.longitude, event.latitude]}
+            position={[event.latitude, event.longitude]}
             eventHandlers={{
               click: () => setSelectedEvent(event),
             }}
@@ -63,6 +73,16 @@ const LeafletMap = ({ events }: { events: IEvent[] }) => {
           </Marker>
         ))}
       </MapContainer>
+      {position?.lat && position.lat ? (
+        <>
+          <p className="text-3xl font-semibold mt-20">
+            Events happening near you
+          </p>
+          <NearEvents events={closeEvents} userId={userId} />
+        </>
+      ) : (
+        <></>
+      )}
     </div>
   )
 }

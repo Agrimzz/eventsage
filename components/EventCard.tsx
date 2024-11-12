@@ -1,4 +1,4 @@
-import { auth } from "@/auth"
+"use client"
 import { formatDate } from "@/lib/utlis"
 import { EventDetails } from "@/types"
 import { IconArrowUpRight, IconEdit, IconEye } from "@tabler/icons-react"
@@ -7,7 +7,13 @@ import Link from "next/link"
 import React from "react"
 import DeleteConfirmation from "./DeleteConfirmation"
 
-const EventCard = async ({ event }: { event: EventDetails }) => {
+const EventCard = ({
+  event,
+  userId,
+}: {
+  event: EventDetails
+  userId: string
+}) => {
   const {
     _id,
     title,
@@ -20,12 +26,8 @@ const EventCard = async ({ event }: { event: EventDetails }) => {
     organizer: { _id: organizerId, username, image },
   } = event
 
-  const session = await auth()
-
   const ticketStatus = new Date(event.ticketDate) < new Date()
   const eventEnded = new Date(event.endDateTime) < new Date()
-
-  const userId = session?.user?.id as string
 
   const isOrganizer = userId === organizerId
 

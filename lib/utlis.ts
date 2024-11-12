@@ -1,3 +1,5 @@
+import { EventDetails } from "@/types"
+
 export function formatDate(date: string | Date) {
   return new Date(date).toLocaleDateString("en-US", {
     month: "long",
@@ -16,23 +18,43 @@ export function formatDateTime(date: string | Date) {
   })
 }
 
-export function generateMapEmbedUrlFromLink(url: string) {
-  // Regex to capture the primary latitude and longitude (either at "@..." or within "3d...4d" sections)
-  const latLngRegex = /@([-.\d]+),([-.\d]+)|3d([-.\d]+)!4d([-.\d]+)/g
-  let match
-  let latitude = null
-  let longitude = null
+function haversineDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+) {
+  const R = 6371 // Radius of Earth in kilometers
+  const dLat = ((lat2 - lat1) * Math.PI) / 180
+  const dLon = ((lon2 - lon1) * Math.PI) / 180
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2)
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 
-  // Loop through matches to get the last lat/lon pair
-  while ((match = latLngRegex.exec(url)) !== null) {
-    latitude = match[1] || match[3]
-    longitude = match[2] || match[4]
-  }
+  return R * c
+}
 
-  // Check if latitude and longitude were found
-  if (latitude && longitude) {
-    return `https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${latitude},${longitude}&t=&z=14&ie=UTF8&iwloc=B&output=embed`
-  }
-
-  return null // Return null if no coordinates were found
+export function findClosestEvents(
+  userLat: number | undefined,
+  userLng: number | undefined,
+  events: EventDetails[],
+  radius: number | undefined
+) {
+  if (!userLat || !userLng || !radius) return []
+  return events
+    .map((event) => {
+      const distance = haversineDistance(
+        userLat,
+        userLng,
+        event.latitude,
+        event.longitude
+      )
+      return { ...event, distance }
+    })
+    .filter((event) => event.distance <= radius) // Only include events within the radius
+    .sort((a, b) => a.distance - b.distance) // Sort by closest distance
 }

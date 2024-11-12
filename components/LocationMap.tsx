@@ -22,7 +22,7 @@ const LocationMap = ({
 }) => {
   return (
     <MapContainer
-      center={[longitude || 27.7103, latitude || 85.3222]}
+      center={[latitude || 27.7103, longitude || 85.3222]}
       zoom={13}
       scrollWheelZoom={false}
       style={{
@@ -30,13 +30,14 @@ const LocationMap = ({
         width: "100%",
         position: "relative",
         borderRadius: "20px",
+        zIndex: 0,
       }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker position={[longitude || 27.7103, latitude || 85.3222]}>
+      <Marker position={[latitude || 27.7103, longitude || 85.3222]}>
         <Popup>{location}</Popup>
       </Marker>
     </MapContainer>

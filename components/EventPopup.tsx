@@ -1,10 +1,10 @@
-import { IEvent } from "@/lib/database/models/event.model"
 import { formatDateTime } from "@/lib/utlis"
+import { EventDetails } from "@/types"
 import { IconClock, IconCurrencyRupee, IconMapPin } from "@tabler/icons-react"
 import Link from "next/link"
 import React from "react"
 
-const EventPopup = ({ event }: { event: IEvent }) => {
+const EventPopup = ({ event }: { event: EventDetails }) => {
   return (
     <div className="rounded-full w-[300px] ">
       <Link href={`/events/${event._id}`}>
