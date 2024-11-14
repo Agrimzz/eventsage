@@ -4,6 +4,8 @@ import EventCard from "@/components/EventCard"
 import LeafletMap from "@/components/LeafletMap"
 import SearchInput from "@/components/SearchForm"
 import { getLatestEvents } from "@/lib/actions/event.actions"
+import { getUserInteractions } from "@/lib/actions/interaction.action"
+import { createUserVector, recommendEvents } from "@/lib/utlis"
 import { EventDetails } from "@/types"
 import React from "react"
 
@@ -17,6 +19,12 @@ export default async function Home() {
     page: 1,
     limit: 6,
   })
+
+  const userInteraction = await getUserInteractions(userId)
+  const vector = createUserVector(userInteraction)
+  console.log(vector)
+
+  const recommendedEvents = recommendEvents(vector, events?.data)
 
   return (
     <>
@@ -41,6 +49,20 @@ export default async function Home() {
           )}
         </ul>
       </section>
+      {recommendedEvents && (
+        <section className="section_container">
+          <p className="text-3xl font-semibold mt">Recommended Events</p>
+          <ul className="mt-7 card_grid">
+            {recommendedEvents.length > 0 ? (
+              recommendedEvents.map((event: EventDetails) => (
+                <EventCard key={event._id} event={event} userId={userId} />
+              ))
+            ) : (
+              <p className="no-results">No events found</p>
+            )}
+          </ul>
+        </section>
+      )}
 
       <LeafletMap events={events?.data} userId={userId} />
 

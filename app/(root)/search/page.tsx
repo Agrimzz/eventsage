@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import EventCard from "@/components/EventCard"
 import SearchForm from "@/components/SearchForm"
 import { getAllEvents } from "@/lib/actions/event.actions"
@@ -9,6 +10,8 @@ const Search = async ({
 }: {
   searchParams: Promise<{ query: string; category: string }>
 }) => {
+  const session = await auth()
+  const userId = session?.user?.id as string
   const query = (await searchParams).query
   const category = (await searchParams).category
 
@@ -36,7 +39,7 @@ const Search = async ({
         <ul className="mt-7 card_grid">
           {events?.data.length > 0 ? (
             events?.data.map((event: EventDetails) => (
-              <EventCard key={event._id} event={event} />
+              <EventCard key={event._id} event={event} userId={userId} />
             ))
           ) : (
             <p className="no-results">No events found</p>

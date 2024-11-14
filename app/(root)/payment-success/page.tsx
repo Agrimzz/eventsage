@@ -1,37 +1,28 @@
-"use client"
-import React, { useEffect } from "react"
-import { useSearchParams } from "next/navigation"
+import React from "react"
 import { createOrder } from "@/lib/actions/order.actions"
 import Link from "next/link"
 import { IconCheck } from "@tabler/icons-react"
+import { addInteraction } from "@/lib/actions/interaction.action"
 
-const PaymentSuccess = () => {
-  const searchParams = useSearchParams()
-  const tid = searchParams.get("tid")
-  const eid = searchParams.get("eid")
-  const uid = searchParams.get("uid")
-  const totalAmount = searchParams.get("price")
+const PaymentSuccess = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined }
+}) => {
+  const { tid, eid, uid, price: totalAmount } = searchParams
 
-  useEffect(() => {
-    if (!tid || !eid || !uid || !totalAmount) {
-      return
-    }
+  if (!tid || !eid || !uid || !totalAmount) {
+    return <p>Invalid payment details</p>
+  }
 
-    const handleCreateOrder = async () => {
-      try {
-        await createOrder({
-          tid,
-          eventId: eid,
-          buyerId: uid,
-          totalAmount,
-        })
-      } catch (error) {
-        console.error("Error creating order:", error)
-      }
-    }
+  await createOrder({
+    tid,
+    eventId: eid,
+    buyerId: uid,
+    totalAmount,
+  })
 
-    handleCreateOrder()
-  }, [tid, eid, uid])
+  await addInteraction(uid, eid, "purchase")
 
   return (
     <>

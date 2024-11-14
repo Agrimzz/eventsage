@@ -15,6 +15,7 @@ import Checkout from "@/components/Checkout"
 import LocationMap from "@/components/LocationMap"
 import EventCard from "@/components/EventCard"
 import { EventDetails as EventType } from "@/types"
+import { addInteraction } from "@/lib/actions/interaction.action"
 
 const md = markdownit()
 
@@ -38,6 +39,10 @@ const EventDetails = async ({
     limit: 2,
     page: 1,
   })
+
+  if (userId !== event.organizer._id) {
+    await addInteraction(userId, id, "view")
+  }
 
   if (!event) return notFound()
 
@@ -149,7 +154,7 @@ const EventDetails = async ({
           <p className="text-3xl font-semibold">Related Events</p>
           <ul className="mt-7 card_grid">
             {relatedEvents?.data.map((event: EventType) => (
-              <EventCard key={event._id} event={event} />
+              <EventCard key={event._id} event={event} userId={userId} />
             ))}
           </ul>
         </div>
