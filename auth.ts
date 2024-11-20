@@ -27,6 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const newUser = {
             email: profile?.email,
             username: profile?.name?.replace(" ", "").toLowerCase(),
+            fullname: profile?.name,
             image: profile?.picture,
           }
           await User.create(newUser)

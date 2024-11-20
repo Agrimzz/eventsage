@@ -1,6 +1,12 @@
 import { auth } from "@/auth"
 import UserEvents from "@/components/UserEvents"
 import { getUserById } from "@/lib/actions/useractions"
+import { Anchor } from "@mantine/core"
+import {
+  IconBrandFacebook,
+  IconBrandInstagram,
+  IconBrandX,
+} from "@tabler/icons-react"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -37,6 +43,24 @@ const OrganizerPage = async ({
           <p className="mt-7 text-center text-base font-medium">
             {user?.email}
           </p>
+
+          <div className="flex-between mt-7 gap-3">
+            {user.instagram && (
+              <Link href={user.instagram} target="_blank">
+                <IconBrandInstagram color="white" size={32} />
+              </Link>
+            )}
+            {user.facebook && (
+              <Link href={user.facebook} target="_blank">
+                <IconBrandFacebook color="white" size={32} />
+              </Link>
+            )}
+            {user.twitter && (
+              <Link href={user.twitter} target="_blank">
+                <IconBrandX color="white" size={32} />
+              </Link>
+            )}
+          </div>
         </div>
 
         <div className="flex-1 flex flex-col gap-5 lg:-mt-5">

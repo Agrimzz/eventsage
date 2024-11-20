@@ -38,4 +38,7 @@ export const userFormSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   email: z.string().email(),
   image: z.instanceof(File).or(z.string()).or(z.null()),
+  instagram: z.string().url().optional().or(z.null()),
+  facebook: z.string().url().optional().or(z.null()),
+  twitter: z.string().url().optional().or(z.null()),
 })

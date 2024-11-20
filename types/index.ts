@@ -60,6 +60,9 @@ export type Organizer = {
   username: string
   email: string
   image: string
+  instagram?: string
+  facebook?: string
+  twitter?: string
 }
 
 export type EventDetails = {

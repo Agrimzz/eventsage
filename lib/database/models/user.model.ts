@@ -13,7 +13,23 @@ const UserSchema = new Schema({
   image: {
     type: String,
   },
+  instagram: {
+    type: String,
+    default: "",
+  },
+  facebook: {
+    type: String,
+    default: "",
+  },
+  twitter: {
+    type: String,
+    default: "",
+  },
 })
+
+// if (models.User) {
+//   delete models.User
+// }
 
 const User = models.User || model("User", UserSchema)
 

@@ -9,6 +9,11 @@ import { modals } from "@mantine/modals"
 import { userFormSchema } from "@/lib/validator"
 import { updateUser } from "@/lib/actions/useractions"
 import { useRouter } from "next/navigation"
+import {
+  IconBrandFacebook,
+  IconBrandInstagram,
+  IconBrandX,
+} from "@tabler/icons-react"
 
 const UserForm = ({ user }: { user: Organizer }) => {
   const router = useRouter()
@@ -18,6 +23,9 @@ const UserForm = ({ user }: { user: Organizer }) => {
       username: user.username,
       email: user.email,
       image: user.image,
+      instagram: user.instagram || undefined,
+      facebook: user.facebook || undefined,
+      twitter: user.twitter || undefined,
     },
     validate: zodResolver(userFormSchema),
   })
@@ -73,6 +81,27 @@ const UserForm = ({ user }: { user: Organizer }) => {
           styles={formStyles}
           {...form.getInputProps("email")}
           disabled
+        />
+        <TextInput
+          label="Instagram"
+          size="lg"
+          styles={formStyles}
+          {...form.getInputProps("instagram")}
+          leftSection={<IconBrandInstagram />}
+        />
+        <TextInput
+          label="Facebook"
+          size="lg"
+          styles={formStyles}
+          {...form.getInputProps("facebook")}
+          leftSection={<IconBrandFacebook />}
+        />
+        <TextInput
+          label="Twitter"
+          size="lg"
+          styles={formStyles}
+          {...form.getInputProps("twitter")}
+          leftSection={<IconBrandX />}
         />
         <button className="bg-primary text-white px-5 py-3 mt-5 rounded-full font-semibold">
           Update
