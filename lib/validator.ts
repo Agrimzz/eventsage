@@ -42,3 +42,8 @@ export const userFormSchema = z.object({
   facebook: z.string().url().optional().or(z.null()),
   twitter: z.string().url().optional().or(z.null()),
 })
+
+export const adminFormSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+})

@@ -1,7 +1,6 @@
 import { auth } from "@/auth"
 import UserEvents from "@/components/UserEvents"
 import { getUserById } from "@/lib/actions/useractions"
-import { Anchor } from "@mantine/core"
 import {
   IconBrandFacebook,
   IconBrandInstagram,
