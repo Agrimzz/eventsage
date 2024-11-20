@@ -28,7 +28,6 @@ const AdminLogin = () => {
       form.values.email === "admin@eventsage.np" &&
       form.values.password === "admin"
     ) {
-      console.log(form.values.email)
       router.push("/admin/dashboard")
     } else {
       setError(true)

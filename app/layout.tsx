@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import "@mantine/core/styles.css"
+import "mantine-datatable/styles.css"
 import "@mantine/dates/styles.css"
 import { MantineProvider } from "@mantine/core"
 import { ModalsProvider } from "@mantine/modals"

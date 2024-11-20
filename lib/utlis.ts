@@ -88,7 +88,6 @@ export function recommendEvents(
   // Calculate the similarity scores
   const scoredEvents = allEvents.map((event) => {
     const eventVector = createEventVector(event)
-    console.log("Event", eventVector)
     const similarityScore = cosineSimilarity(userVector, eventVector)
     return { event, similarityScore }
   })

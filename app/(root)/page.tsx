@@ -22,7 +22,6 @@ export default async function Home() {
 
   const userInteraction = await getUserInteractions(userId)
   const vector = createUserVector(userInteraction)
-  console.log(vector)
 
   const recommendedEvents = recommendEvents(vector, events?.data)
 

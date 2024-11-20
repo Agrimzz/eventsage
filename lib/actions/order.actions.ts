@@ -146,3 +146,72 @@ export async function getOrdersByEvent({
     console.log(error)
   }
 }
+
+export async function getAllOrders() {
+  try {
+    await connectToDatabase()
+
+    const orders = await Order.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "buyer",
+          foreignField: "_id",
+          as: "buyer",
+        },
+      },
+      {
+        $unwind: "$buyer",
+      },
+      {
+        $lookup: {
+          from: "events",
+          localField: "event",
+          foreignField: "_id",
+          as: "event",
+        },
+      },
+      {
+        $unwind: "$event",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "event.organizer",
+          foreignField: "_id",
+          as: "organizer",
+        },
+      },
+      {
+        $unwind: "$organizer",
+      },
+      {
+        $project: {
+          _id: 1,
+          totalAmount: 1,
+          createdAt: 1,
+          eventTitle: "$event.title",
+          buyer: "$buyer.username",
+          buyerEmail: "$buyer.email",
+          organizer: "$organizer.username",
+          organizerEmail: "$organizer.email",
+        },
+      },
+    ])
+
+    return JSON.parse(JSON.stringify(orders)) // Ensure proper serialization
+  } catch (error) {
+    console.error("Error fetching orders:", error)
+    throw new Error("Failed to retrieve orders")
+  }
+}
+
+export async function getOrdersCount() {
+  try {
+    await connectToDatabase()
+    const ordersCount = await Order.countDocuments()
+    return ordersCount
+  } catch (error) {
+    console.log(error)
+  }
+}

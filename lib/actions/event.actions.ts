@@ -329,3 +329,13 @@ export async function getRelatedEventsByCategory({
     console.log(error)
   }
 }
+
+export async function getEventsCount() {
+  try {
+    await connectToDatabase()
+    const eventsCount = await Event.countDocuments()
+    return eventsCount
+  } catch (error) {
+    console.log(error)
+  }
+}
