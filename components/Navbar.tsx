@@ -2,6 +2,7 @@ import Link from "next/link"
 import { auth, signOut, signIn } from "@/auth"
 
 import ProfileMenu from "./ProfileMenu"
+import { IconCirclePlus, IconLogout } from "@tabler/icons-react"
 
 const Navbar = async () => {
   const session = await auth()
@@ -20,6 +21,7 @@ const Navbar = async () => {
             <>
               <Link href="/events/create">
                 <span className="max-sm:hidden">Create</span>
+                <IconCirclePlus className="sm:hidden text-green-500" />
               </Link>
 
               <form
@@ -30,6 +32,7 @@ const Navbar = async () => {
                 }}
               >
                 <button type="submit">
+                  <IconLogout className="sm:hidden text-red-500" />
                   <span className="max-sm:hidden">Logout</span>
                 </button>
               </form>

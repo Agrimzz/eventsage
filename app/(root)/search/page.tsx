@@ -18,7 +18,7 @@ const Search = async ({
   const events = await getAllEvents({
     query,
     page: 1,
-    limit: 6,
+    limit: 30,
     category: category,
   })
 

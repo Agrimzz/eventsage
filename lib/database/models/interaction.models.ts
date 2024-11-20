@@ -25,6 +25,12 @@ const InteractionSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  tid: {
+    type: String,
+    required: function (this: any) {
+      return this.type === "purchase"
+    },
+  },
 })
 
 const Interaction =

@@ -15,14 +15,18 @@ const PaymentSuccess = async ({
     return <p>Invalid payment details</p>
   }
 
+  const formattedTotalAmount = parseInt(
+    totalAmount.split(",").join("").split(".")[0]
+  )
+
   await createOrder({
     tid,
     eventId: eid,
     buyerId: uid,
-    totalAmount,
+    totalAmount: formattedTotalAmount.toString(),
   })
 
-  await addInteraction(uid, eid, "purchase")
+  await addInteraction(uid, eid, "purchase", tid)
 
   return (
     <>
@@ -42,7 +46,7 @@ const PaymentSuccess = async ({
           <p className="text-xl font-semibold">Event ID : {eid}</p>
           <p className="text-xl font-semibold">User ID : {uid}</p>
           <p className="text-xl font-semibold">
-            Total Amount : Rs.{totalAmount}
+            Total Amount : Rs.{formattedTotalAmount}
           </p>
         </div>
       </div>

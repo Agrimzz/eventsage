@@ -36,7 +36,11 @@ const EventCard = ({
       className={`event-card group relative ${eventEnded && " !bg-primary/10"}`}
     >
       <div className="flex-between">
-        <p className="event-card_date">
+        <p
+          className={`event-card_date ${
+            ticketStatus && "!bg-red-500 text-white"
+          }`}
+        >
           {ticketStatus ? "Ticket Sale Ended" : formatDate(startDateTime)}
         </p>
         <div className="flex gap-1.5">
@@ -80,7 +84,7 @@ const EventCard = ({
       <Link href={`/events/${_id}`}>
         <p className="event-card_desc">{description}</p>
         {eventEnded ? (
-          <p className="font-bold my-3 text-xl">Event Ended</p>
+          <p className="font-bold my-3 text-xl text-red-500">Event Ended</p>
         ) : (
           <p className="font-bold my-3 text-xl">
             {price === 0 ? "Free" : `Rs. ${price}`}

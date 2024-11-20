@@ -30,7 +30,7 @@ export const createOrder = async (order: CreateOrderParams) => {
 
 export async function getOrdersByUser({
   userId,
-  limit = 3,
+  limit = 10,
 }: GetOrdersByUserParams) {
   try {
     await connectToDatabase()

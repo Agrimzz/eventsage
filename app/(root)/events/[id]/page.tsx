@@ -40,7 +40,7 @@ const EventDetails = async ({
     page: 1,
   })
 
-  if (userId !== event.organizer._id) {
+  if (userId && userId !== event.organizer._id) {
     await addInteraction(userId, id, "view")
   }
 
